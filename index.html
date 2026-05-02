@@ -701,6 +701,10 @@
   }
 
   applyState();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/meal-planner/sw.js');
+  }
 </script>
 </body>
 </html>
