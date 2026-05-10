@@ -1,4 +1,4 @@
-const CACHE = 'meal-planner-v1';
+const CACHE = 'meal-planner-v2';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(clients.claim()));
