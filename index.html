@@ -435,7 +435,7 @@
   }
 </style>
 </head>
-<body>
+<body data-version="2026-05-30">
 
 <div class="header">
   <div class="header-top">
@@ -919,6 +919,18 @@
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/meal-planner/sw.js');
   }
+
+  // Auto-refresh when returning to app if a new version has been published
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    fetch(window.location.href, { cache: 'no-store' })
+      .then(r => r.text())
+      .then(html => {
+        const m = html.match(/data-version="([^"]+)"/);
+        if (m && m[1] !== document.body.dataset.version) location.reload();
+      })
+      .catch(() => {});
+  });
 </script>
 </body>
 </html>
