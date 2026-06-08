@@ -423,7 +423,7 @@
   }
 </style>
 </head>
-<body data-version="2026-06-08a">
+<body data-version="2026-06-08b">
 
 <div class="header">
   <div class="header-top">
@@ -582,6 +582,7 @@
       <div class="grocery-item" data-section="dairy" data-id="d7" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Sliced cheese</div><div class="item-note">Burgers + lunches</div></div></div>
       <div class="grocery-item" data-section="dairy" data-id="d8" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Sour cream</div><div class="item-note">Tacos Tuesday</div></div></div>
       <div class="grocery-item" data-section="dairy" data-id="d9" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Butter</div><div class="item-note">Check levels</div></div></div>
+      <div class="grocery-item" data-section="dairy" data-id="d10" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Half and half</div></div></div>
 
       <div class="section-spacer"></div>
 
@@ -592,6 +593,7 @@
       <div class="grocery-item" data-section="deli" data-id="dl3" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Sliced whole wheat bread</div></div></div>
       <div class="grocery-item" data-section="deli" data-id="dl4" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Sourdough sliced bread</div></div></div>
       <div class="grocery-item" data-section="deli" data-id="dl5" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Hummus</div><div class="item-note">Lunches + snacking</div></div></div>
+      <div class="grocery-item" data-section="deli" data-id="dl6" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Sandwich bread</div></div></div>
 
       <div class="section-spacer"></div>
 
@@ -622,6 +624,13 @@
       <div class="grocery-section-header"><h2>Bakery</h2><span class="section-count" id="count-bakery"></span></div>
       <div class="grocery-item" data-section="bakery" data-id="bk1" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Morning rounds</div></div></div>
       <div class="grocery-item" data-section="bakery" data-id="bk2" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Dinner rolls or crusty bread</div><div class="item-note">Weekly dinner staple</div></div></div>
+
+      <div class="section-spacer"></div>
+
+      <!-- Beverages -->
+      <div class="grocery-section-header"><h2>Beverages</h2><span class="section-count" id="count-beverages"></span></div>
+      <div class="grocery-item" data-section="beverages" data-id="bv1" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Sparkling water</div></div></div>
+      <div class="grocery-item" data-section="beverages" data-id="bv2" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Limoncello soda</div></div></div>
 
     </div>
   </div>
@@ -722,7 +731,7 @@
   }
 
   function updateCounts() {
-    const sections = ['proteins','produce','dairy','deli','pantry','breakfast','bakery'];
+    const sections = ['proteins','produce','dairy','deli','pantry','breakfast','bakery','beverages'];
     let totalChecked = 0, totalAll = 0;
     sections.forEach(sec => {
       const items = document.querySelectorAll(`[data-section="${sec}"]`);
