@@ -130,6 +130,9 @@
   .mtag-freeze { background: var(--green-light); color: var(--green); }
   .mtag-picky { background: var(--accent-light); color: var(--accent); }
   .mtag-win { background: var(--green-light); color: var(--green); }
+  .mtag-protein { background: #E8EEF5; color: #2D5986; }
+
+  .meal-slot + .meal-slot { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
 
   .grocery-section-header { padding: 18px 20px 8px; display: flex; align-items: center; gap: 10px; }
   .grocery-section-header h2 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); flex: 1; }
@@ -201,7 +204,7 @@
   .notes-empty { padding: 48px 20px; text-align: center; color: var(--ink-faint); font-size: 14px; line-height: 1.6; }
 </style>
 </head>
-<body data-version="2026-06-14a">
+<body data-version="2026-06-17a">
 
 <div class="header">
   <div class="header-top">
@@ -279,12 +282,28 @@
     <div class="day-row">
       <div class="day-col"><div class="day-name">Thu</div><div class="day-date">18</div></div>
       <div class="meal-col">
-        <div class="meal-type-label">Thursday — Jason cooks, 3 for dinner</div>
-        <div class="meal-title">TJ's pulled pork sandwiches</div>
-        <div class="meal-note">Heat the pulled pork, serve on buns with slaw or whatever's easy. Jason-proof. C: plain pulled pork + bun ✓</div>
-        <div class="meal-tags">
-          <span class="mtag mtag-win">Easy — heat + serve ✓</span>
-          <span class="mtag mtag-win">C: plain pulled pork ✓</span>
+        <div class="meal-slot">
+          <div class="meal-type-label">Breakfast · ~37g protein</div>
+          <div class="meal-title">Sausage & egg sandwich</div>
+          <div class="meal-note">2 eggs + 2 sausage patties + cheddar on English muffin</div>
+        </div>
+        <div class="meal-slot">
+          <div class="meal-type-label">Snack</div>
+          <div class="meal-title">Apple + almond butter + mixed nuts</div>
+        </div>
+        <div class="meal-slot">
+          <div class="meal-type-label">Lunch · ~40g protein</div>
+          <div class="meal-title">Grilled chicken grain bowl</div>
+          <div class="meal-note">Leftover chicken over mixed greens, cherry tomatoes, cucumber, bell pepper, farro, lemon vinaigrette</div>
+        </div>
+        <div class="meal-slot">
+          <div class="meal-type-label">Dinner — Jason cooks, 3 for dinner</div>
+          <div class="meal-title">TJ's pulled pork sandwiches</div>
+          <div class="meal-note">Heat the pulled pork, serve on buns with slaw. C: plain pulled pork + bun ✓</div>
+          <div class="meal-tags">
+            <span class="mtag mtag-win">Easy — heat + serve ✓</span>
+            <span class="mtag mtag-win">C: plain pulled pork ✓</span>
+          </div>
         </div>
       </div>
     </div>
@@ -292,11 +311,27 @@
     <div class="day-row">
       <div class="day-col"><div class="day-name">Fri</div><div class="day-date">19</div></div>
       <div class="meal-col">
-        <div class="meal-type-label">Pizza night</div>
-        <div class="meal-title">Homemade pizza</div>
-        <div class="meal-note">Dough cold-ferments from Wednesday → ready Friday. Build your own. C: cheese only.</div>
-        <div class="meal-tags">
-          <span class="mtag mtag-win">C: cheese pizza ✓</span>
+        <div class="meal-slot">
+          <div class="meal-type-label">Breakfast · ~37g protein</div>
+          <div class="meal-title">Greek yogurt parfait + hard boiled egg</div>
+          <div class="meal-note">Fage 0% (1 cup) + chia seeds + mixed berries + granola, hard boiled egg on the side</div>
+        </div>
+        <div class="meal-slot">
+          <div class="meal-type-label">Snack</div>
+          <div class="meal-title">Hummus + raw veggies + cheese stick</div>
+        </div>
+        <div class="meal-slot">
+          <div class="meal-type-label">Lunch · ~36g protein</div>
+          <div class="meal-title">Tuna salad on sourdough + tomato soup</div>
+          <div class="meal-note">Canned tuna + Greek yogurt + celery, open-face on sourdough. Tomato soup on the side.</div>
+        </div>
+        <div class="meal-slot">
+          <div class="meal-type-label">Pizza night</div>
+          <div class="meal-title">Homemade pizza</div>
+          <div class="meal-note">Dough cold-ferments from Wednesday → ready Friday. Build your own. C: cheese only.</div>
+          <div class="meal-tags">
+            <span class="mtag mtag-win">C: cheese pizza ✓</span>
+          </div>
         </div>
       </div>
     </div>
@@ -349,6 +384,8 @@
       <div class="grocery-item" data-section="produce" data-id="pr14" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Mandarin oranges</div><div class="item-note">Lukas — camp lunches</div></div></div>
       <div class="grocery-item" data-section="produce" data-id="pr15" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Bananas</div></div></div>
       <div class="grocery-item" data-section="produce" data-id="pr16" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Apples or seasonal fruit</div></div></div>
+      <div class="grocery-item" data-section="produce" data-id="pr17" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Mixed berries</div><div class="item-note">Friday breakfast parfait</div></div></div>
+      <div class="grocery-item" data-section="produce" data-id="pr18" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Celery</div><div class="item-note">Friday tuna salad</div></div></div>
 
       <div class="section-spacer"></div>
 
@@ -364,6 +401,7 @@
       <div class="grocery-item" data-section="dairy" data-id="d8" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">String cheese</div></div></div>
       <div class="grocery-item" data-section="dairy" data-id="d9" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Butter</div><div class="item-note">Check levels</div></div></div>
       <div class="grocery-item" data-section="dairy" data-id="d10" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Half and half</div></div></div>
+      <div class="grocery-item" data-section="dairy" data-id="d11" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Sliced cheddar</div><div class="item-note">Thursday breakfast sandwich</div></div></div>
 
       <div class="section-spacer"></div>
 
@@ -388,6 +426,9 @@
       <div class="grocery-item" data-section="pantry" data-id="pa6" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Whole grain crackers</div></div></div>
       <div class="grocery-item" data-section="pantry" data-id="pa7" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Almond butter / PB</div><div class="item-note">Check levels</div></div></div>
       <div class="grocery-item" data-section="pantry" data-id="pa8" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Olive oil</div><div class="item-note">Check levels</div></div></div>
+      <div class="grocery-item" data-section="pantry" data-id="pa9" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Farro, small bag</div><div class="item-note">Thursday lunch grain bowl</div></div></div>
+      <div class="grocery-item" data-section="pantry" data-id="pa10" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Canned chunk light tuna, 2 cans</div><div class="item-note">Friday lunch</div></div></div>
+      <div class="grocery-item" data-section="pantry" data-id="pa11" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Canned tomato soup</div><div class="item-note">Friday lunch — side</div></div></div>
 
       <div class="section-spacer"></div>
 
@@ -398,6 +439,8 @@
       <div class="grocery-item" data-section="breakfast" data-id="b3" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Granola</div></div></div>
       <div class="grocery-item" data-section="breakfast" data-id="b4" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Mixed nuts + trail mix</div></div></div>
       <div class="grocery-item" data-section="breakfast" data-id="b5" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Dark chocolate</div></div></div>
+      <div class="grocery-item" data-section="breakfast" data-id="b6" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">English muffins</div><div class="item-note">Thursday breakfast sandwich</div></div></div>
+      <div class="grocery-item" data-section="breakfast" data-id="b7" onclick="toggle(this)"><div class="check-circle"><span class="check-icon">✓</span></div><div><div class="item-text">Chia seeds</div><div class="item-note">Friday breakfast parfait</div></div></div>
 
       <div class="section-spacer"></div>
 
@@ -475,7 +518,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const STORAGE_KEY = 'family-grocery-v7';
+  const STORAGE_KEY = 'family-grocery-v8';
 
   function loadState() {
     try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : {}; } catch(e) { return {}; }
