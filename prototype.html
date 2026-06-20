@@ -1261,7 +1261,7 @@
   <div class="header-row">
     <div class="header-title" id="header-title">Meals</div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <div class="week-label" id="header-week">Week of June 14</div>
+      <div class="week-label" id="header-week">Week of June 20</div>
       <button class="header-add-btn" id="header-add-btn" onclick="openAddRecipeDrawer()">+</button>
     </div>
   </div>
@@ -1270,12 +1270,35 @@
 <!-- ── CONTENT ── -->
 <div class="content" id="meals-view">
 
-  <!-- SUN 14 — Sunday Prep anchored above Sunday card -->
+  <!-- SAT 20 — Tonight -->
+  <div class="day-group">
+    <div class="meal-card tonight">
+      <div class="day-col">
+        <div class="day-name">Sat</div>
+        <div class="day-date">20</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Tonight</div>
+          <div class="time-badge">35 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Pan-seared pork tenderloin + roasted potatoes + zucchini & peppers + salad</div>
+        </div>
+        <div class="meal-description">Roast potatoes + zucchini + bell peppers at 425°. Sear tenderloin last — 3–4 min per side, rest before slicing.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: plain pork + raw veg ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUN 21 — Father's Day + prep day -->
   <div class="day-group">
     <div class="prep-section">
       <div class="collapsible-header" onclick="toggleCollapsible(this)">
         <span class="collapsible-label">Prep</span>
-        <span class="prep-count">4 items</span>
+        <span class="prep-count">5 items</span>
         <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="7 4 13 10 7 16"/>
         </svg>
@@ -1285,69 +1308,123 @@
           <div class="prep-section-item">
             <div class="prep-dot urgent"></div>
             <div>
-              <div class="prep-item-text">Marinate flank steak now</div>
-              <div class="prep-item-sub">Soy sauce, olive oil, garlic, balsamic — even 1–2 hours makes a real difference. Bag it in the fridge.</div>
+              <div class="prep-item-text">Marinate tri-tip — do this first</div>
+              <div class="prep-item-sub">Salt, pepper, garlic, rosemary, olive oil. A few hours in the fridge before the grill makes a real difference.</div>
             </div>
           </div>
           <div class="prep-section-item">
             <div class="prep-dot urgent"></div>
             <div>
+              <div class="prep-item-text">Make pizza dough → refrigerate</div>
+              <div class="prep-item-sub">Sunday dough cold-ferments all week — ready to stretch Friday afternoon. Earlier in the day is better for flavor.</div>
+            </div>
+          </div>
+          <div class="prep-section-item">
+            <div class="prep-dot"></div>
+            <div>
+              <div class="prep-item-text">Batch grill chicken breasts — cook extra</div>
+              <div class="prep-item-sub">Beyond what C needs for dinner. Covers C all week and adult salad protein through Wednesday.</div>
+            </div>
+          </div>
+          <div class="prep-section-item">
+            <div class="prep-dot"></div>
+            <div>
               <div class="prep-item-text">Wash and chop raw veg for C</div>
-              <div class="prep-item-sub">Carrots, cucumbers, bell peppers. Store in containers — grabs for the whole week.</div>
+              <div class="prep-item-sub">Carrots, cucumbers, bell peppers. Store in containers — grab-and-go every night.</div>
             </div>
           </div>
           <div class="prep-section-item">
             <div class="prep-dot"></div>
             <div>
-              <div class="prep-item-text">Hard-boil eggs for lunches and snacks</div>
-              <div class="prep-item-sub">Batch of 6. Lasts the week.</div>
-            </div>
-          </div>
-          <div class="prep-section-item">
-            <div class="prep-dot"></div>
-            <div>
-              <div class="prep-item-text">Move frozen protein to fridge to thaw</div>
-              <div class="prep-item-sub">If anything is needed Mon or Tue — move it now.</div>
+              <div class="prep-item-text">Hard-boil eggs (batch of 6)</div>
+              <div class="prep-item-sub">Adult lunches and quick protein snacks all week.</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="meal-card tonight">
+    <div class="meal-card">
       <div class="day-col">
         <div class="day-name">Sun</div>
-        <div class="day-date">14</div>
+        <div class="day-date">21</div>
       </div>
       <div class="meal-body">
         <div class="meal-top-row">
-          <div class="theme-descriptor">Grill Night</div>
+          <div class="theme-descriptor">Father's Day Grill</div>
           <div class="time-badge">45 min</div>
         </div>
         <div class="meal-title-row">
-          <div class="meal-title">Flank steak + grilled chicken + corn</div>
+          <div class="meal-title">Tri-tip + batch grilled chicken + grilled corn + asparagus + big salad</div>
         </div>
-        <div class="meal-description">Flank steak is the main. Grill chicken breasts alongside for C — extras go in the fridge for salads all week.</div>
+        <div class="meal-description">Tri-tip is the star. Grill extra chicken breasts alongside — C's protein for the week and covers adult salads through Wednesday.</div>
         <div class="dietary-pills">
           <span class="dietary-pill">C: grilled chicken ✓</span>
+          <span class="dietary-pill">Batch chicken → all week</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MON 15 -->
+  <!-- MON 22 -->
   <div class="day-group">
     <div class="meal-card">
       <div class="day-col">
         <div class="day-name">Mon</div>
-        <div class="day-date">15</div>
+        <div class="day-date">22</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Pasta Night</div>
+          <div class="time-badge">20 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Pesto pasta + sundried tomatoes + wilted spinach + sliced grilled chicken</div>
+        </div>
+        <div class="meal-description">Toss hot pasta with pesto, sundried tomatoes, and spinach — it wilts right in. Top with sliced Sunday batch chicken for adults. Anna fasting today.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: plain pasta + butter ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUE 23 -->
+  <div class="day-group">
+    <div class="meal-card">
+      <div class="day-col">
+        <div class="day-name">Tue</div>
+        <div class="day-date">23</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Taco Tuesday</div>
+          <div class="time-badge">25 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Ground turkey tacos + sautéed peppers & onions + Mexican rice</div>
+        </div>
+        <div class="meal-description">Brown turkey with taco seasoning. Sauté peppers + onions alongside. Full taco bar — salsa, shredded cheese, sour cream, avocado. Corn tortillas + hard shells.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: turkey + hard shell ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WED 24 — fish night -->
+  <div class="day-group">
+    <div class="meal-card">
+      <div class="day-col">
+        <div class="day-name">Wed</div>
+        <div class="day-date">24</div>
       </div>
       <div class="meal-body">
         <div class="meal-top-row">
           <div class="theme-descriptor">Fish Night</div>
-          <div class="time-badge">25 min</div>
+          <div class="time-badge">30 min</div>
         </div>
         <div class="meal-title-row">
-          <div class="meal-title">Salmon + roasted veg</div>
+          <div class="meal-title">Salmon + roasted broccoli + rice + homemade sourdough</div>
           <svg class="recipe-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="3" y="2" width="14" height="16" rx="2"/>
             <line x1="6.5" y1="7" x2="13.5" y2="7"/>
@@ -1355,38 +1432,15 @@
             <line x1="6.5" y1="14" x2="10" y2="14"/>
           </svg>
         </div>
-        <div class="meal-description">Pan-seared salmon, lemon butter. Roast whatever veg is on hand — set raw portion aside for C first.</div>
+        <div class="meal-description">Roast broccoli at 425°. Pan-sear or roast salmon. Serve with rice and the sourdough loaf. C gets Sunday batch chicken instead.</div>
         <div class="dietary-pills">
-          <span class="dietary-pill">C: leftover grilled chicken ✓</span>
+          <span class="dietary-pill">C: Sunday's chicken + raw veg ✓</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TUE 16 -->
-  <div class="day-group">
-    <div class="meal-card">
-      <div class="day-col">
-        <div class="day-name">Tue</div>
-        <div class="day-date">16</div>
-      </div>
-      <div class="meal-body">
-        <div class="meal-top-row">
-          <div class="theme-descriptor">Taco Tuesday</div>
-          <div class="time-badge">20 min</div>
-        </div>
-        <div class="meal-title-row">
-          <div class="meal-title">Ground beef tacos</div>
-        </div>
-        <div class="meal-description">Brown beef with taco seasoning. Full taco bar — hard shells, sour cream, salsa, shredded cheese, avocado.</div>
-        <div class="dietary-pills">
-          <span class="dietary-pill">C: beef + hard shell ✓</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WED 17 — pizza dough prep anchored above (needs to happen Wed night for Fri) -->
+  <!-- THU 25 — with morning prep reminder -->
   <div class="day-group">
     <div class="prep-section">
       <div class="collapsible-header" onclick="toggleCollapsible(this)">
@@ -1401,8 +1455,8 @@
           <div class="prep-section-item">
             <div class="prep-dot"></div>
             <div>
-              <div class="prep-item-text">Make pizza dough tonight → refrigerate</div>
-              <div class="prep-item-sub">48-hour cold ferment. Mix and knead tonight, cover and refrigerate — ready to stretch Friday afternoon.</div>
+              <div class="prep-item-text">Move shrimp from freezer to fridge</div>
+              <div class="prep-item-sub">Do this Thursday morning — thaws in the fridge, ready for dinner.</div>
             </div>
           </div>
         </div>
@@ -1410,49 +1464,26 @@
     </div>
     <div class="meal-card">
       <div class="day-col">
-        <div class="day-name">Wed</div>
-        <div class="day-date">17</div>
-      </div>
-      <div class="meal-body">
-        <div class="meal-top-row">
-          <div class="theme-descriptor">Sheet Pan Night</div>
-          <div class="time-badge">40 min</div>
-        </div>
-        <div class="meal-title-row">
-          <div class="meal-title">Italian sausage + peppers + sweet potatoes</div>
-        </div>
-        <div class="meal-description">All at 400°. Sweet potatoes go in first — 10 min head start. Sourdough alongside.</div>
-        <div class="dietary-pills">
-          <span class="dietary-pill">C: plain sausage + raw veg ✓</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- THU 18 -->
-  <div class="day-group">
-    <div class="meal-card">
-      <div class="day-col">
         <div class="day-name">Thu</div>
-        <div class="day-date">18</div>
+        <div class="day-date">25</div>
       </div>
       <div class="meal-body">
         <div class="meal-top-row">
-          <div class="theme-descriptor">Easy Night</div>
-          <div class="time-badge">15 min</div>
+          <div class="theme-descriptor">Grain Bowl</div>
+          <div class="time-badge">25 min</div>
         </div>
         <div class="meal-title-row">
-          <div class="meal-title">TJ's pulled pork sandwiches</div>
+          <div class="meal-title">Shrimp + orzo + cucumber + cherry tomatoes + lemon + arugula</div>
         </div>
-        <div class="meal-description">Heat the pulled pork, serve on buns with slaw. Jason cooks — 3 for dinner.</div>
+        <div class="meal-description">Cook orzo, toss with shrimp, cucumber, cherry tomatoes, arugula, lemon + olive oil. Light and fresh.</div>
         <div class="dietary-pills">
-          <span class="dietary-pill">C: plain pulled pork ✓</span>
+          <span class="dietary-pill">C: raw veg + cheese ✓</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FRI 19 — urgent dough prep anchored above -->
+  <!-- FRI 26 — pizza night, dough prep expanded -->
   <div class="day-group">
     <div class="prep-section">
       <div class="collapsible-header" onclick="toggleCollapsible(this)">
@@ -1477,7 +1508,7 @@
     <div class="meal-card">
       <div class="day-col">
         <div class="day-name">Fri</div>
-        <div class="day-date">19</div>
+        <div class="day-date">26</div>
       </div>
       <div class="meal-body">
         <div class="meal-top-row">
@@ -1485,7 +1516,7 @@
           <div class="time-badge">30 min</div>
         </div>
         <div class="meal-title-row">
-          <div class="meal-title">Homemade pizza</div>
+          <div class="meal-title">Homemade pizza + roasted peppers & mushrooms + side salad</div>
           <svg class="recipe-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="3" y="2" width="14" height="16" rx="2"/>
             <line x1="6.5" y1="7" x2="13.5" y2="7"/>
@@ -1493,27 +1524,9 @@
             <line x1="6.5" y1="14" x2="10" y2="14"/>
           </svg>
         </div>
-        <div class="meal-description">Cold ferment dough from Wednesday. Stretch, sauce, build your own. C: cheese only.</div>
+        <div class="meal-description">Cold ferment dough from Sunday — stretch Friday afternoon. Build your own. C: cheese only. Side salad rounds it out.</div>
         <div class="dietary-pills">
           <span class="dietary-pill">C: cheese pizza ✓</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SAT 20 — OPEN -->
-  <div class="day-group">
-    <div class="meal-card open-night">
-      <div class="day-col">
-        <div class="day-name">Sat</div>
-        <div class="day-date">20</div>
-      </div>
-      <div class="meal-body">
-        <div class="meal-top-row">
-          <div class="theme-descriptor">Open</div>
-        </div>
-        <div class="meal-title-row">
-          <div class="meal-title">Free night</div>
         </div>
       </div>
     </div>
@@ -1548,8 +1561,32 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Flank steak, 1.5–2 lbs</div>
-      <div class="grocery-item-note">Sunday grill night — marinate same day</div>
+      <div class="grocery-item-name">Pork tenderloin, 1</div>
+      <div class="grocery-item-note">Tonight</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Tri-tip, 2 lbs</div>
+      <div class="grocery-item-note">Sunday Father's Day grill</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Chicken breasts, 5–6</div>
+      <div class="grocery-item-note">Sunday batch grill — C all week + adult salads</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Ground turkey, 1.25 lbs</div>
+      <div class="grocery-item-note">Tacos Tuesday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1557,31 +1594,15 @@
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
       <div class="grocery-item-name">Salmon, 4 portions</div>
-      <div class="grocery-item-note">Monday fish night</div>
+      <div class="grocery-item-note">Wednesday fish night</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Ground beef, 1.5 lbs</div>
-      <div class="grocery-item-note">Taco Tuesday</div>
-    </div>
-    <button class="grocery-dots" onclick="openEdit(this)">···</button>
-  </div>
-  <div class="grocery-item">
-    <div class="grocery-check" onclick="toggleCheck(this)"></div>
-    <div class="grocery-item-body">
-      <div class="grocery-item-name">Italian sausage links, 1 pack</div>
-      <div class="grocery-item-note">Sheet pan Wednesday</div>
-    </div>
-    <button class="grocery-dots" onclick="openEdit(this)">···</button>
-  </div>
-  <div class="grocery-item">
-    <div class="grocery-check" onclick="toggleCheck(this)"></div>
-    <div class="grocery-item-body">
-      <div class="grocery-item-name">TJ's pulled pork</div>
-      <div class="grocery-item-note">Thursday easy night</div>
+      <div class="grocery-item-name">Frozen shrimp, 1 lb</div>
+      <div class="grocery-item-note">Thursday — check freezer first</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1590,7 +1611,7 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Corn on the cob, 4–6 ears</div>
+      <div class="grocery-item-name">Asparagus, 1 bunch</div>
       <div class="grocery-item-note">Sunday grill</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
@@ -1598,24 +1619,8 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Salsa</div>
-      <div class="grocery-item-note">Fresh section — Taco Tuesday</div>
-    </div>
-    <button class="grocery-dots" onclick="openEdit(this)">···</button>
-  </div>
-  <div class="grocery-item">
-    <div class="grocery-check" onclick="toggleCheck(this)"></div>
-    <div class="grocery-item-body">
-      <div class="grocery-item-name">Avocados, 2</div>
-      <div class="grocery-item-note">Taco Tuesday</div>
-    </div>
-    <button class="grocery-dots" onclick="openEdit(this)">···</button>
-  </div>
-  <div class="grocery-item">
-    <div class="grocery-check" onclick="toggleCheck(this)"></div>
-    <div class="grocery-item-body">
-      <div class="grocery-item-name">Bell peppers, 3–4</div>
-      <div class="grocery-item-note">Sheet pan Wednesday + C's raw veg all week</div>
+      <div class="grocery-item-name">Corn on the cob, 4</div>
+      <div class="grocery-item-note">Sunday grill</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1623,15 +1628,63 @@
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
       <div class="grocery-item-name">Zucchini, 2</div>
-      <div class="grocery-item-note">Sheet pan Wednesday</div>
+      <div class="grocery-item-note">Tonight roasted</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Sweet potatoes, 2 large</div>
-      <div class="grocery-item-note">Sheet pan Wednesday</div>
+      <div class="grocery-item-name">Yellow or Yukon gold potatoes</div>
+      <div class="grocery-item-note">Tonight roasted</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Baby spinach, large bag</div>
+      <div class="grocery-item-note">Monday pasta + salads all week</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Broccoli, 1 head</div>
+      <div class="grocery-item-note">Wednesday salmon night</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Arugula, small bag</div>
+      <div class="grocery-item-note">Thursday orzo</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Cherry tomatoes</div>
+      <div class="grocery-item-note">Thursday orzo + salads all week</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Cucumbers, 2</div>
+      <div class="grocery-item-note">Thursday orzo + C's raw veg all week</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Bell peppers, 3–4</div>
+      <div class="grocery-item-note">Tonight + Tacos Tuesday + C's raw veg + pizza Friday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1646,24 +1699,32 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Cucumbers, 2</div>
-      <div class="grocery-item-note">C's raw veg all week</div>
+      <div class="grocery-item-name">Lemons, 3–4</div>
+      <div class="grocery-item-note">Salmon Wednesday + shrimp orzo Thursday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Lemons, 2–3</div>
-      <div class="grocery-item-note">Salmon Monday + general</div>
+      <div class="grocery-item-name">Avocados, 2</div>
+      <div class="grocery-item-note">Tacos Tuesday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Mixed greens or baby spinach</div>
-      <div class="grocery-item-note">Salads all week</div>
+      <div class="grocery-item-name">Salsa</div>
+      <div class="grocery-item-note">Fresh section — Tacos Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Mushrooms</div>
+      <div class="grocery-item-note">Pizza Friday toppings</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1699,7 +1760,7 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Apples</div>
+      <div class="grocery-item-name">Apples or seasonal fruit</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1715,7 +1776,7 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
-      <div class="grocery-item-name">Mozzarella</div>
+      <div class="grocery-item-name">Mozzarella, shredded</div>
       <div class="grocery-item-note">Pizza Friday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
@@ -1723,7 +1784,16 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
+      <div class="grocery-item-name">Shredded Mexican blend</div>
+      <div class="grocery-item-note">Tacos Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
       <div class="grocery-item-name">Parmesan</div>
+      <div class="grocery-item-note">Pasta Monday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1746,7 +1816,7 @@
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
       <div class="grocery-item-name">Sour cream</div>
-      <div class="grocery-item-note">Taco Tuesday</div>
+      <div class="grocery-item-note">Tacos Tuesday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1766,28 +1836,13 @@
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
-  <div class="grocery-item">
-    <div class="grocery-check" onclick="toggleCheck(this)"></div>
-    <div class="grocery-item-body">
-      <div class="grocery-item-name">Dinner rolls</div>
-    </div>
-    <button class="grocery-dots" onclick="openEdit(this)">···</button>
-  </div>
-  <div class="grocery-item">
-    <div class="grocery-check" onclick="toggleCheck(this)"></div>
-    <div class="grocery-item-body">
-      <div class="grocery-item-name">Buns</div>
-      <div class="grocery-item-note">Thursday pulled pork sandwiches</div>
-    </div>
-    <button class="grocery-dots" onclick="openEdit(this)">···</button>
-  </div>
 
   <div class="grocery-section-header">Pantry</div>
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
       <div class="grocery-item-name">Corn tortillas</div>
-      <div class="grocery-item-note">Taco Tuesday</div>
+      <div class="grocery-item-note">Check pantry — Taco Tuesday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
@@ -1802,7 +1857,47 @@
   <div class="grocery-item">
     <div class="grocery-check" onclick="toggleCheck(this)"></div>
     <div class="grocery-item-body">
+      <div class="grocery-item-name">Pasta (spaghetti or similar)</div>
+      <div class="grocery-item-note">Check pantry — Monday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Orzo</div>
+      <div class="grocery-item-note">Check pantry — Thursday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Rice</div>
+      <div class="grocery-item-note">Check pantry — Wednesday + Mexican rice Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Sundried tomatoes</div>
+      <div class="grocery-item-note">Check pantry — Monday pasta</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
       <div class="grocery-item-name">Taco seasoning</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">All-purpose flour + yeast</div>
+      <div class="grocery-item-note">Check levels — pizza dough Sunday</div>
     </div>
     <button class="grocery-dots" onclick="openEdit(this)">···</button>
   </div>
