@@ -1,0 +1,2778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Meal Planner — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF8F4;
+    --paper: #F3EFE8;
+    --ink: #1C1A17;
+    --ink-muted: #6B6660;
+    --ink-faint: #B8B3AC;
+    --accent: #C8440A;
+    --accent-light: #F5E8E2;
+    --green: #3A6B3E;
+    --green-light: #E4EEE5;
+    --gold: #9A7B2F;
+    --gold-light: #F5EFD8;
+    --border: #E0DAD1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #DFDEDE;
+    color: var(--ink);
+    min-height: 100vh;
+    max-width: 430px;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  /* ── GROCERY VIEW ── */
+  .grocery-view {
+    display: none;
+    padding-bottom: 168px;
+  }
+
+  /* Toolbar */
+  .grocery-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+  }
+  .grocery-hint { font-size: 13px; color: var(--ink-muted); }
+  .grocery-toolbar-actions { display: flex; gap: 8px; align-items: center; }
+  .grocery-hide-btn {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s, color 0.15s;
+  }
+  .grocery-hide-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .grocery-clear-btn {
+    background: none;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Quick add */
+  .grocery-quick-add {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+  }
+  .quick-add-input {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 15px;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+  .quick-add-input::placeholder { color: var(--ink-faint); }
+  .quick-add-btn {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: #C8A882;
+    border: none;
+    color: white;
+    font-size: 24px;
+    font-weight: 300;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  /* Inline edit form */
+  .grocery-item-edit {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 16px;
+  }
+  .edit-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .edit-label + .edit-label, .edit-notes-row + .edit-label { margin-top: 12px; }
+  .edit-input {
+    width: 100%;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 15px;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .edit-input:focus { border-color: var(--accent); }
+  .edit-notes-row { display: flex; gap: 8px; align-items: stretch; }
+  .edit-notes-input {
+    flex: 1;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 15px;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+  .edit-notes-input:focus { border-color: var(--accent); }
+  .edit-remove-btn {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--accent);
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .edit-done-btn {
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 8px;
+    padding: 0 18px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    flex-shrink: 0;
+  }
+
+  /* Hide-checked mode */
+  .grocery-view.hide-checked .checked-item { display: none; }
+
+  .grocery-section-header {
+    background: #DFDEDE;
+    padding: 14px 20px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .grocery-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+  }
+  .grocery-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-faint);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .grocery-check.checked {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .grocery-check.checked::after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 9px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+  }
+  .grocery-item.checked-item {
+    background: var(--paper);
+    opacity: 0.6;
+  }
+  .grocery-item-body { flex: 1; min-width: 0; }
+  .grocery-item-name {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .grocery-item.checked-item .grocery-item-name {
+    text-decoration: line-through;
+  }
+  .grocery-item-note {
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .grocery-dots {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 2px 4px;
+    flex-shrink: 0;
+    align-self: center;
+    letter-spacing: 0.05em;
+    font-size: 16px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--ink);
+    padding: 56px 20px 18px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .week-label {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-bottom: 3px;
+  }
+
+  /* ── SCROLL CONTENT ── */
+  .content { padding-bottom: 168px; }
+
+  /* ── SUNDAY PREP SECTION ── */
+  .prep-section {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+  }
+  .collapsible-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    gap: 10px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .collapsible-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    flex: 1;
+  }
+  .prep-count {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-faint);
+    margin-right: 10px;
+  }
+  .chevron {
+    width: 20px;
+    height: 20px;
+    color: var(--ink-faint);
+    transition: transform 0.22s ease;
+    flex-shrink: 0;
+  }
+  .chevron.open { transform: rotate(90deg); }
+
+  .collapsible-body { display: none; }
+  .collapsible-body.open { display: block; }
+
+  .prep-section-body { padding: 0 20px 14px; }
+  .prep-section-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 11px 0;
+    border-top: 1px solid var(--border);
+  }
+  .prep-section-item:first-child { border-top: none; }
+  .prep-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ink-muted);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+  .prep-dot.urgent { background: var(--accent); }
+  .prep-item-text { font-size: 15px; color: var(--ink); line-height: 1.4; }
+  .prep-item-sub { font-size: 13px; color: var(--ink-muted); margin-top: 2px; line-height: 1.45; }
+
+  /* ── INLINE PREP ITEM ── */
+  .inline-prep {
+    background: var(--paper);
+    border-bottom: 1px solid var(--border);
+  }
+  .inline-prep-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .prep-badge {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .prep-badge.urgent { background: var(--accent); color: white; }
+  .prep-badge.default { background: var(--border); color: var(--ink-muted); }
+  .inline-prep-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    flex: 1;
+    line-height: 1.35;
+  }
+  .inline-prep-body {
+    display: none;
+    padding: 0 20px 14px 60px;
+  }
+  .inline-prep-body.open { display: block; }
+  .inline-prep-body p {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+  }
+
+  /* ── MEAL CARD ── */
+  .day-group { margin-bottom: 4px; }
+
+  .meal-card {
+    display: flex;
+    gap: 14px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--cream);
+    align-items: flex-start;
+  }
+  .meal-card.open-night { background: var(--paper); }
+
+  .day-col {
+    width: 44px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .day-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    line-height: 1;
+  }
+  .day-date {
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+  .meal-card.tonight .day-date { color: var(--accent); font-weight: 500; }
+
+  .meal-body { flex: 1; min-width: 0; }
+
+  .meal-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+  .theme-descriptor {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .open-night .theme-descriptor { color: var(--ink-faint); }
+
+  .time-badge {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+    background: var(--gold-light);
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .meal-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+  .meal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .open-night .meal-title { color: var(--ink-faint); font-style: italic; }
+
+  .recipe-icon {
+    width: 18px; height: 18px;
+    color: var(--ink-faint);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .meal-description {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+
+  .dietary-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dietary-pill {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: var(--green-light);
+    color: var(--green);
+    line-height: 1.3;
+  }
+
+  /* ── BOTTOM FIXED ── */
+  .bottom-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 430px;
+    z-index: 200;
+  }
+
+  /* ── AI CONTAINER (expandable pill) ── */
+  .ai-container {
+    background: var(--ink);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -4px 24px rgba(28,26,23,0.18);
+    overflow: hidden;
+  }
+  .ai-expanded-section {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  .ai-expanded-section.open { max-height: 140px; }
+  .ai-expanded-inner {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 16px 16px 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ai-expanded-inner::-webkit-scrollbar { display: none; }
+
+  /* ── AI BAR ── */
+  .ai-bar {
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .ai-expanded-heading {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #C8A882;
+    padding: 20px 20px 6px;
+    line-height: 1.2;
+  }
+
+  .ai-prompt-text {
+    flex: 1;
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #C8A882;
+    line-height: 1.2;
+  }
+  .ai-bar.activated .ai-prompt-text { display: none; }
+
+  .ai-bar-input {
+    display: none;
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: #C8A882;
+    min-width: 0;
+  }
+  .ai-bar-input::placeholder { color: #6B6660; opacity: 1; }
+  .ai-bar.activated .ai-bar-input { display: block; }
+
+  .ai-note-btn {
+    background: rgba(250,248,244,0.08);
+    border: none;
+    border-radius: 8px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: rgba(250,248,244,0.55);
+    flex-shrink: 0;
+  }
+  .ai-bar.activated .ai-note-btn { display: none; }
+  .ai-send-group { display: none; align-items: center; gap: 8px; flex-shrink: 0; }
+  .ai-bar.activated .ai-send-group { display: flex; }
+  .ai-send-circle-sm {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #C8A882;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .ai-action-btn {
+    background: none;
+    border: none;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: rgba(250,248,244,0.55);
+    flex-shrink: 0;
+  }
+
+  /* ── TAB BAR ── */
+  .tab-bar {
+    background: var(--ink);
+    display: flex;
+    padding: 10px 0 32px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    color: rgba(250,248,244,0.3);
+    transition: color 0.15s;
+  }
+  .tab-btn.active { color: var(--cream); }
+  .tab-btn svg { width: 24px; height: 24px; }
+  .tab-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .quick-prompt-pill {
+    background: rgba(255,255,255,0.11);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cream);
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+  }
+  .quick-prompt-pill:active { background: rgba(255,255,255,0.2); }
+
+  /* ── CHAT OVERLAY ── */
+  .chat-overlay {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%) translateY(100%);
+    width: 100%;
+    max-width: 430px;
+    height: calc(100svh - 44px);
+    background: #1C1A17;
+    border-radius: 20px 20px 0 0;
+    z-index: 400;
+    transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .chat-overlay.open { transform: translateX(-50%) translateY(0); }
+
+  .chat-drag-handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 14px auto 0;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .chat-overlay-header {
+    padding: 20px 24px 16px;
+    flex-shrink: 0;
+  }
+  .chat-mode-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .chat-subtitle {
+    font-size: 15px;
+    color: rgba(250,248,244,0.4);
+    line-height: 1.55;
+  }
+
+  .chat-messages-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 16px 16px;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .chat-messages-area::-webkit-scrollbar { display: none; }
+
+  .chat-bubble {
+    max-width: 82%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .chat-bubble.user {
+    background: #C8A882;
+    color: #1C1A17;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+  }
+  .chat-bubble.assistant {
+    background: rgba(255,255,255,0.09);
+    color: rgba(250,248,244,0.85);
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+  }
+  .chat-timestamp {
+    font-size: 11px;
+    color: rgba(255,255,255,0.22);
+    text-align: right;
+    margin-top: 3px;
+  }
+  .chat-assistant-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.22);
+    margin-top: 3px;
+    padding-left: 2px;
+  }
+
+  /* Draft meal cards */
+  .draft-cards-group { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+  .draft-meal-card {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 13px 15px;
+  }
+  .draft-card-row { display: flex; gap: 12px; align-items: flex-start; }
+  .draft-day-col { width: 36px; flex-shrink: 0; }
+  .draft-day-name { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); }
+  .draft-day-date { font-size: 20px; font-weight: 300; color: var(--ink); line-height: 1.1; margin-top: 1px; }
+  .draft-meal-body { flex: 1; min-width: 0; }
+  .draft-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .draft-theme { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+  .draft-time { font-size: 11px; font-weight: 500; color: var(--gold); background: var(--gold-light); padding: 2px 8px; border-radius: 999px; }
+  .draft-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--ink); margin-bottom: 6px; line-height: 1.2; }
+  .draft-pill { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 999px; background: var(--green-light); color: var(--green); display: inline-block; }
+
+  /* Confirm pills */
+  .chat-confirm-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+  .chat-confirm-pill {
+    background: rgba(255,255,255,0.11);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cream);
+    white-space: nowrap;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .chat-confirm-pill:active { background: rgba(255,255,255,0.2); }
+
+  /* Thinking dots */
+  .thinking-dots { display: flex; gap: 5px; padding: 13px 16px; background: rgba(255,255,255,0.09); border-radius: 18px; border-bottom-left-radius: 5px; align-self: flex-start; }
+  .t-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.45); animation: tdot 1.2s ease-in-out infinite; }
+  .t-dot:nth-child(2) { animation-delay: 0.2s; }
+  .t-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes tdot { 0%,80%,100% { opacity:0.3; transform:scale(0.8); } 40% { opacity:1; transform:scale(1); } }
+
+  /* Chat input + tab bar */
+  .chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+  .chat-input-field {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border-radius: 22px;
+    padding: 12px 18px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.28);
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+  }
+  .chat-send-circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #C8A882;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+  }
+  .chat-send-circle:active { opacity: 0.75; }
+
+  .chat-tab-bar {
+    background: #1C1A17;
+    display: flex;
+    padding: 8px 0 28px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+  }
+  .chat-tab-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: none; border: none; cursor: pointer; padding: 4px 0;
+    color: rgba(250,248,244,0.28);
+  }
+  .chat-tab-btn.active { color: var(--cream); }
+  .chat-tab-btn svg { width: 22px; height: 22px; }
+  .chat-tab-btn-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; }
+
+/* ── RECIPES VIEW ── */
+.recipes-view { display: none; padding-bottom: 168px; }
+
+.recipes-search-row {
+  display: flex; gap: 10px; padding: 12px 16px;
+  background: var(--cream); border-bottom: 1px solid var(--border);
+}
+.search-wrap { flex: 1; position: relative; }
+.search-icon-abs { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ink-faint); pointer-events: none; }
+.search-input-field {
+  width: 100%; background: var(--paper); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 14px 10px 34px;
+  font-size: 15px; color: var(--ink); font-family: 'DM Sans', sans-serif;
+  outline: none; box-sizing: border-box;
+}
+.search-input-field::placeholder { color: var(--ink-faint); }
+.sort-filter-btn {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent-light); border: none; color: var(--accent);
+  cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.recipe-section-header {
+  background: #DFDEDE; padding: 14px 20px 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-muted);
+}
+.recipe-item {
+  display: flex; align-items: center; padding: 16px 20px;
+  background: var(--cream); border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.recipe-item:active { background: var(--paper); }
+.recipe-item-body { flex: 1; min-width: 0; }
+.recipe-item-name { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.recipe-item-meta { display: flex; gap: 14px; margin-top: 4px; }
+.recipe-meta-tag { font-size: 12px; color: var(--ink-muted); display: flex; align-items: center; gap: 3px; }
+.recipe-item-chevron { color: var(--ink-faint); }
+
+/* ── ADD RECIPE DRAWER ── */
+.add-recipe-overlay {
+  position: fixed; inset: 0; z-index: 480;
+  background: rgba(0,0,0,0); pointer-events: none;
+  transition: background 0.35s;
+}
+.add-recipe-overlay.open { background: rgba(0,0,0,0.4); pointer-events: auto; }
+.add-recipe-drawer {
+  position: fixed; left: 50%; bottom: 0; z-index: 490;
+  transform: translateX(-50%) translateY(100%);
+  width: 100%; max-width: 430px;
+  background: var(--cream); border-radius: 20px 20px 0 0;
+  transition: transform 0.42s cubic-bezier(0.32,0.72,0,1);
+  padding-bottom: 48px;
+}
+.add-recipe-drawer.open { transform: translateX(-50%) translateY(0); }
+.drawer-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 14px auto 0; }
+.drawer-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--ink); padding: 20px 24px 4px; }
+.drawer-subtitle { font-size: 14px; color: var(--ink-muted); padding: 0 24px 20px; line-height: 1.45; }
+.drawer-section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); padding: 0 24px 10px; }
+.drawer-url-row { display: flex; gap: 10px; padding: 0 24px 20px; }
+.drawer-url-input {
+  flex: 1; background: var(--paper); border: 1.5px solid var(--border); border-radius: 10px;
+  padding: 12px 14px; font-size: 15px; color: var(--ink);
+  font-family: 'DM Sans', sans-serif; outline: none;
+}
+.drawer-url-input::placeholder { color: var(--ink-faint); }
+.drawer-add-btn {
+  background: var(--accent); border: none; border-radius: 10px;
+  padding: 12px 22px; font-size: 15px; font-weight: 600;
+  color: white; cursor: pointer; font-family: 'DM Sans', sans-serif; flex-shrink: 0;
+}
+.drawer-or {
+  text-align: center; font-size: 13px; color: var(--ink-faint);
+  padding: 4px 24px 20px; display: flex; align-items: center; gap: 12px;
+}
+.drawer-or-line { flex: 1; height: 1px; background: var(--border); }
+.drawer-option {
+  margin: 0 24px 12px; border-radius: 14px; padding: 18px 20px;
+  display: flex; align-items: center; gap: 16px; cursor: pointer; border: none;
+  font-family: 'DM Sans', sans-serif; width: calc(100% - 48px); text-align: left;
+}
+.drawer-option.dark { background: var(--ink); }
+.drawer-option.light { background: var(--paper); border: 1px solid var(--border); }
+.drawer-option-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.drawer-option.dark .drawer-option-icon { background: rgba(255,255,255,0.12); color: var(--cream); }
+.drawer-option.light .drawer-option-icon { background: var(--border); color: var(--ink-muted); }
+.drawer-option-body { flex: 1; }
+.drawer-option-title { font-size: 16px; font-weight: 600; }
+.drawer-option.dark .drawer-option-title { color: var(--cream); }
+.drawer-option.light .drawer-option-title { color: var(--ink); }
+.drawer-option-sub { font-size: 13px; margin-top: 3px; }
+.drawer-option.dark .drawer-option-sub { color: #C8A882; }
+.drawer-option.light .drawer-option-sub { color: var(--ink-muted); }
+.drawer-chevron { color: var(--ink-faint); }
+
+/* ── CAMERA PERMISSION DIALOG ── */
+.camera-perm-overlay {
+  position: fixed; inset: 0; z-index: 550;
+  background: rgba(0,0,0,0.45);
+  display: none; align-items: center; justify-content: center; padding: 32px;
+}
+.camera-perm-overlay.open { display: flex; }
+.sys-dialog {
+  background: white; border-radius: 14px; width: 280px;
+  overflow: hidden; text-align: center;
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+}
+.sys-dialog-icon { padding: 24px 24px 10px; font-size: 32px; }
+.sys-dialog-title { font-size: 17px; font-weight: 600; color: #000; padding: 0 20px 20px; line-height: 1.35; }
+.sys-dialog-divider { height: 0.5px; background: rgba(0,0,0,0.15); }
+.sys-dialog-btn {
+  padding: 14px 20px; font-size: 17px; color: #007AFF;
+  cursor: pointer; background: none; border: none; width: 100%;
+  font-family: -apple-system, 'SF Pro Text', sans-serif;
+}
+.sys-dialog-btn.primary { font-weight: 600; }
+.sys-dialog-btn:active { background: rgba(0,0,0,0.06); }
+
+/* ── CAMERA VIEW ── */
+.camera-view {
+  position: fixed; inset: 0; z-index: 600;
+  background: #0a0804; display: none; flex-direction: column;
+}
+.camera-view.open { display: flex; }
+.camera-bg {
+  flex: 1; position: relative; overflow: hidden;
+  background: linear-gradient(155deg, #2b1e0e 0%, #4a3218 40%, #1c1006 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.camera-faux-page {
+  width: 240px; height: 200px; background: rgba(245,238,225,0.85);
+  border-radius: 4px; position: relative; padding: 12px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.camera-page-line { height: 7px; background: rgba(100,80,60,0.25); border-radius: 2px; }
+.camera-page-line:nth-child(2) { width: 75%; }
+.camera-page-line:nth-child(3) { width: 90%; }
+.camera-page-line:nth-child(4) { width: 60%; }
+.camera-frame-guide {
+  position: absolute; inset: -16px; border: 2px solid rgba(255,255,255,0.5); border-radius: 6px;
+}
+.camera-corner { position: absolute; width: 18px; height: 18px; }
+.camera-corner.tl { top: -2px; left: -2px; border-top: 3px solid white; border-left: 3px solid white; border-radius: 4px 0 0 0; }
+.camera-corner.tr { top: -2px; right: -2px; border-top: 3px solid white; border-right: 3px solid white; border-radius: 0 4px 0 0; }
+.camera-corner.bl { bottom: -2px; left: -2px; border-bottom: 3px solid white; border-left: 3px solid white; border-radius: 0 0 0 4px; }
+.camera-corner.br { bottom: -2px; right: -2px; border-bottom: 3px solid white; border-right: 3px solid white; border-radius: 0 0 4px 0; }
+.camera-top-bar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 2;
+  display: flex; justify-content: space-between; align-items: center; padding: 56px 18px 16px;
+}
+.camera-top-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,0.45); border: none; color: white;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.camera-hint {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.55); border-radius: 20px; padding: 8px 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+  color: white; white-space: nowrap;
+}
+.camera-controls {
+  background: #0a0804; padding: 20px 24px 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.camera-side-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  background: none; border: none; cursor: pointer;
+}
+.camera-side-icon {
+  width: 46px; height: 46px; border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  display: flex; align-items: center; justify-content: center; color: white;
+}
+.camera-side-label { font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+.camera-capture-btn {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: white; border: 4px solid rgba(255,255,255,0.35);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.2); cursor: pointer;
+}
+
+/* ── PROCESSING VIEW ── */
+.processing-view {
+  position: fixed; inset: 0; z-index: 650;
+  background: rgba(10,8,4,0.8);
+  display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px;
+}
+.processing-view.open { display: flex; }
+.processing-spinner {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--accent);
+  animation: rspin 1s linear infinite; margin-bottom: 28px;
+}
+@keyframes rspin { to { transform: rotate(360deg); } }
+.processing-title { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--cream); margin-bottom: 8px; text-align: center; }
+.processing-sub { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 36px; text-align: center; line-height: 1.5; }
+.processing-steps { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 280px; }
+.proc-step { display: flex; align-items: center; gap: 12px; }
+.proc-indicator {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; transition: all 0.35s;
+}
+.proc-indicator.done { background: var(--accent); border-color: var(--accent); }
+.proc-label { font-size: 14px; color: rgba(255,255,255,0.4); transition: color 0.35s; }
+.proc-label.done { color: var(--cream); }
+
+/* ── REVIEW / EDIT VIEW ── */
+.recipe-edit-view {
+  position: fixed; inset: 0; z-index: 700;
+  background: var(--paper); display: none; flex-direction: column; overflow: hidden;
+}
+.recipe-edit-view.open { display: flex; }
+.rview-header {
+  background: var(--ink); padding: 56px 20px 18px;
+  display: flex; align-items: flex-end; justify-content: space-between; flex-shrink: 0;
+}
+.rview-header-title { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--cream); }
+.rview-header-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(200,168,130,0.5);
+  background: none; color: #C8A882; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 20px; font-weight: 300; line-height: 1;
+}
+.rview-content { flex: 1; overflow-y: auto; }
+.rview-section { background: #DFDEDE; padding: 14px 20px 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-muted); }
+.rview-field { padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--border); }
+.rview-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 8px; }
+.rview-input {
+  width: 100%; background: white; border: 1.5px solid var(--border); border-radius: 8px;
+  padding: 11px 14px; font-size: 15px; color: var(--ink);
+  font-family: 'DM Sans', sans-serif; outline: none; box-sizing: border-box;
+}
+.rview-input:focus { border-color: var(--accent); }
+.rview-split { display: flex; gap: 12px; padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--border); }
+.rview-half { flex: 1; }
+.rview-ingredient-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--border);
+}
+.rview-ingredient-text { flex: 1; font-size: 15px; color: var(--ink); }
+.rview-remove-btn {
+  width: 28px; height: 28px; border-radius: 50%; background: none; border: none;
+  color: #E5534B; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.rview-add-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.rview-add-text { font-size: 15px; color: var(--accent); }
+.rview-add-icon {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--accent);
+  color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 1;
+}
+.rview-step-row { display: flex; gap: 12px; padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--border); align-items: flex-start; }
+.rview-step-num {
+  width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--cream);
+  font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.rview-step-text { flex: 1; font-size: 15px; color: var(--ink); line-height: 1.5; }
+.rview-add-step { display: flex; align-items: center; gap: 6px; padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--border); cursor: pointer; }
+.rview-add-step-text { font-size: 15px; color: var(--accent); }
+.rview-save-bar { padding: 16px 20px 48px; background: var(--paper); flex-shrink: 0; }
+.rview-save-btn { width: 100%; background: var(--accent); border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 600; color: white; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+/* ── RECIPE DETAIL VIEW ── */
+.recipe-detail-view {
+  position: fixed; inset: 0; z-index: 700;
+  background: var(--cream); display: none; flex-direction: column; overflow: hidden;
+}
+.recipe-detail-view.open { display: flex; }
+.recipe-hero {
+  height: 280px; position: relative; flex-shrink: 0;
+  background: linear-gradient(155deg, #c0392b 0%, #8b1a0c 55%, #4a0d06 100%);
+  display: flex; align-items: flex-end;
+}
+.recipe-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)); }
+.recipe-hero-back {
+  position: absolute; top: 56px; left: 16px; z-index: 2;
+  background: rgba(0,0,0,0.35); border: none; border-radius: 50%;
+  width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: white;
+}
+.recipe-hero-title { position: relative; z-index: 2; font-family: 'DM Serif Display', serif; font-size: 32px; color: white; padding: 0 20px 20px; line-height: 1.15; }
+.recipe-detail-content { flex: 1; overflow-y: auto; }
+.recipe-chips-row { display: flex; gap: 10px; padding: 16px 20px; background: var(--cream); border-bottom: 1px solid var(--border); }
+.recipe-chip { background: var(--paper); border-radius: 10px; padding: 10px 16px; flex: 1; }
+.recipe-chip-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px; }
+.recipe-chip-value { font-size: 15px; color: var(--ink); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.recipe-detail-heading { padding: 20px 20px 8px; display: flex; align-items: baseline; justify-content: space-between; }
+.recipe-detail-heading-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--ink); }
+.recipe-detail-heading-count { font-size: 13px; color: var(--accent); font-weight: 500; }
+.recipe-detail-ingredient { display: flex; gap: 10px; padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--cream); align-items: flex-start; }
+.recipe-detail-bullet { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 7px; flex-shrink: 0; }
+.recipe-detail-ingredient-text { font-size: 15px; color: var(--ink); line-height: 1.4; }
+.recipe-detail-step { display: flex; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); background: var(--cream); }
+.recipe-detail-step-num {
+  width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--cream);
+  font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.recipe-detail-step-text { flex: 1; font-size: 15px; color: var(--ink); line-height: 1.55; }
+.recipe-detail-cta { padding: 16px 20px 48px; background: var(--cream); flex-shrink: 0; }
+.recipe-detail-cta-btn { width: 100%; background: var(--accent); border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: 600; color: white; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+/* Header add button */
+.header-add-btn {
+  display: none; width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid rgba(200,168,130,0.5); background: none; color: #C8A882;
+  align-items: center; justify-content: center; cursor: pointer;
+  font-size: 22px; font-weight: 300; line-height: 1;
+}
+
+/* ── ACCOUNT VIEW ── */
+.account-view {
+  display: none;
+  padding-bottom: 120px;
+  background: var(--paper);
+  min-height: calc(100vh - 60px);
+}
+.account-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 24px 20px 10px;
+}
+.account-card-group {
+  background: var(--cream);
+  border-radius: 14px;
+  margin: 0 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.account-member-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.account-member-row:last-child { border-bottom: none; }
+.account-member-name { flex: 1; font-size: 15px; font-weight: 500; color: var(--ink); }
+.account-member-role {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+}
+.account-member-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  color: var(--ink-muted);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1;
+}
+.account-invite-btn {
+  width: calc(100% - 32px);
+  margin: 14px 16px 0;
+  background: var(--accent);
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.account-pref-group {
+  background: var(--cream);
+  border-radius: 14px;
+  margin: 0 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.account-pref-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.account-pref-row:last-child { border-bottom: none; }
+.account-pref-label { font-size: 15px; color: var(--ink); }
+.account-logout-btn {
+  width: calc(100% - 32px);
+  margin: 28px 16px 0;
+  background: none;
+  border: 1.5px solid var(--accent);
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--accent);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-row">
+    <div class="header-title" id="header-title">Meals</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="week-label" id="header-week">Week of June 14</div>
+      <button class="header-add-btn" id="header-add-btn" onclick="openAddRecipeDrawer()">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<div class="content" id="meals-view">
+
+  <!-- SUN 14 — Sunday Prep anchored above Sunday card -->
+  <div class="day-group">
+    <div class="prep-section">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        <span class="collapsible-label">Prep</span>
+        <span class="prep-count">4 items</span>
+        <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="7 4 13 10 7 16"/>
+        </svg>
+      </div>
+      <div class="collapsible-body">
+        <div class="prep-section-body">
+          <div class="prep-section-item">
+            <div class="prep-dot urgent"></div>
+            <div>
+              <div class="prep-item-text">Marinate flank steak now</div>
+              <div class="prep-item-sub">Soy sauce, olive oil, garlic, balsamic — even 1–2 hours makes a real difference. Bag it in the fridge.</div>
+            </div>
+          </div>
+          <div class="prep-section-item">
+            <div class="prep-dot urgent"></div>
+            <div>
+              <div class="prep-item-text">Wash and chop raw veg for C</div>
+              <div class="prep-item-sub">Carrots, cucumbers, bell peppers. Store in containers — grabs for the whole week.</div>
+            </div>
+          </div>
+          <div class="prep-section-item">
+            <div class="prep-dot"></div>
+            <div>
+              <div class="prep-item-text">Hard-boil eggs for lunches and snacks</div>
+              <div class="prep-item-sub">Batch of 6. Lasts the week.</div>
+            </div>
+          </div>
+          <div class="prep-section-item">
+            <div class="prep-dot"></div>
+            <div>
+              <div class="prep-item-text">Move frozen protein to fridge to thaw</div>
+              <div class="prep-item-sub">If anything is needed Mon or Tue — move it now.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card tonight">
+      <div class="day-col">
+        <div class="day-name">Sun</div>
+        <div class="day-date">14</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Grill Night</div>
+          <div class="time-badge">45 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Flank steak + grilled chicken + corn</div>
+        </div>
+        <div class="meal-description">Flank steak is the main. Grill chicken breasts alongside for C — extras go in the fridge for salads all week.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: grilled chicken ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MON 15 -->
+  <div class="day-group">
+    <div class="meal-card">
+      <div class="day-col">
+        <div class="day-name">Mon</div>
+        <div class="day-date">15</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Fish Night</div>
+          <div class="time-badge">25 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Salmon + roasted veg</div>
+          <svg class="recipe-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="2" width="14" height="16" rx="2"/>
+            <line x1="6.5" y1="7" x2="13.5" y2="7"/>
+            <line x1="6.5" y1="10.5" x2="13.5" y2="10.5"/>
+            <line x1="6.5" y1="14" x2="10" y2="14"/>
+          </svg>
+        </div>
+        <div class="meal-description">Pan-seared salmon, lemon butter. Roast whatever veg is on hand — set raw portion aside for C first.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: leftover grilled chicken ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUE 16 -->
+  <div class="day-group">
+    <div class="meal-card">
+      <div class="day-col">
+        <div class="day-name">Tue</div>
+        <div class="day-date">16</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Taco Tuesday</div>
+          <div class="time-badge">20 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Ground beef tacos</div>
+        </div>
+        <div class="meal-description">Brown beef with taco seasoning. Full taco bar — hard shells, sour cream, salsa, shredded cheese, avocado.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: beef + hard shell ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WED 17 — pizza dough prep anchored above (needs to happen Wed night for Fri) -->
+  <div class="day-group">
+    <div class="prep-section">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        <span class="collapsible-label">Prep</span>
+        <span class="prep-count">1 item</span>
+        <svg class="chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="7 4 13 10 7 16"/>
+        </svg>
+      </div>
+      <div class="collapsible-body">
+        <div class="prep-section-body">
+          <div class="prep-section-item">
+            <div class="prep-dot"></div>
+            <div>
+              <div class="prep-item-text">Make pizza dough tonight → refrigerate</div>
+              <div class="prep-item-sub">48-hour cold ferment. Mix and knead tonight, cover and refrigerate — ready to stretch Friday afternoon.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card">
+      <div class="day-col">
+        <div class="day-name">Wed</div>
+        <div class="day-date">17</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Sheet Pan Night</div>
+          <div class="time-badge">40 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Italian sausage + peppers + sweet potatoes</div>
+        </div>
+        <div class="meal-description">All at 400°. Sweet potatoes go in first — 10 min head start. Sourdough alongside.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: plain sausage + raw veg ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THU 18 -->
+  <div class="day-group">
+    <div class="meal-card">
+      <div class="day-col">
+        <div class="day-name">Thu</div>
+        <div class="day-date">18</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Easy Night</div>
+          <div class="time-badge">15 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">TJ's pulled pork sandwiches</div>
+        </div>
+        <div class="meal-description">Heat the pulled pork, serve on buns with slaw. Jason cooks — 3 for dinner.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: plain pulled pork ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRI 19 — urgent dough prep anchored above -->
+  <div class="day-group">
+    <div class="prep-section">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        <span class="collapsible-label">Prep</span>
+        <span class="prep-count">1 item</span>
+        <svg class="chevron open" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="7 4 13 10 7 16"/>
+        </svg>
+      </div>
+      <div class="collapsible-body open">
+        <div class="prep-section-body">
+          <div class="prep-section-item">
+            <div class="prep-dot urgent"></div>
+            <div>
+              <div class="prep-item-text">Take pizza dough out — let rest 1–2 hours</div>
+              <div class="prep-item-sub">Pull dough from the fridge and let it come to room temp before stretching. Cold dough tears — give it at least an hour on the counter.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="meal-card">
+      <div class="day-col">
+        <div class="day-name">Fri</div>
+        <div class="day-date">19</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Pizza Night</div>
+          <div class="time-badge">30 min</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Homemade pizza</div>
+          <svg class="recipe-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="2" width="14" height="16" rx="2"/>
+            <line x1="6.5" y1="7" x2="13.5" y2="7"/>
+            <line x1="6.5" y1="10.5" x2="13.5" y2="10.5"/>
+            <line x1="6.5" y1="14" x2="10" y2="14"/>
+          </svg>
+        </div>
+        <div class="meal-description">Cold ferment dough from Wednesday. Stretch, sauce, build your own. C: cheese only.</div>
+        <div class="dietary-pills">
+          <span class="dietary-pill">C: cheese pizza ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAT 20 — OPEN -->
+  <div class="day-group">
+    <div class="meal-card open-night">
+      <div class="day-col">
+        <div class="day-name">Sat</div>
+        <div class="day-date">20</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-top-row">
+          <div class="theme-descriptor">Open</div>
+        </div>
+        <div class="meal-title-row">
+          <div class="meal-title">Free night</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── GROCERY / FOOD LIST VIEW ── -->
+<div class="grocery-view" id="grocery-view">
+
+  <!-- Toolbar -->
+  <div class="grocery-toolbar">
+    <span class="grocery-hint">Tap items to check off</span>
+    <div class="grocery-toolbar-actions">
+      <button class="grocery-hide-btn" id="grocery-hide-btn" onclick="toggleHideChecked()">
+        <svg width="12" height="12" viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 5 4.5 8.5 11 1.5"/>
+        </svg>
+        Hide
+      </button>
+      <button class="grocery-clear-btn" onclick="clearAllChecked()">Clear all</button>
+    </div>
+  </div>
+
+  <!-- Quick add -->
+  <div class="grocery-quick-add">
+    <input class="quick-add-input" id="quick-add-input" type="text" placeholder="Quick add item…" onkeydown="if(event.key==='Enter') quickAddItem()" />
+    <button class="quick-add-btn" onclick="quickAddItem()">+</button>
+  </div>
+
+  <div class="grocery-section-header">Dinner Proteins</div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Flank steak, 1.5–2 lbs</div>
+      <div class="grocery-item-note">Sunday grill night — marinate same day</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Salmon, 4 portions</div>
+      <div class="grocery-item-note">Monday fish night</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Ground beef, 1.5 lbs</div>
+      <div class="grocery-item-note">Taco Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Italian sausage links, 1 pack</div>
+      <div class="grocery-item-note">Sheet pan Wednesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">TJ's pulled pork</div>
+      <div class="grocery-item-note">Thursday easy night</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+
+  <div class="grocery-section-header">Produce</div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Corn on the cob, 4–6 ears</div>
+      <div class="grocery-item-note">Sunday grill</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Salsa</div>
+      <div class="grocery-item-note">Fresh section — Taco Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Avocados, 2</div>
+      <div class="grocery-item-note">Taco Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Bell peppers, 3–4</div>
+      <div class="grocery-item-note">Sheet pan Wednesday + C's raw veg all week</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Zucchini, 2</div>
+      <div class="grocery-item-note">Sheet pan Wednesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Sweet potatoes, 2 large</div>
+      <div class="grocery-item-note">Sheet pan Wednesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Carrots</div>
+      <div class="grocery-item-note">C's raw veg all week — big bag</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Cucumbers, 2</div>
+      <div class="grocery-item-note">C's raw veg all week</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Lemons, 2–3</div>
+      <div class="grocery-item-note">Salmon Monday + general</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Mixed greens or baby spinach</div>
+      <div class="grocery-item-note">Salads all week</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Yellow onion</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Garlic</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Mandarin oranges</div>
+      <div class="grocery-item-note">Lukas — lunches</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Bananas</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Apples</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+
+  <div class="grocery-section-header">Dairy</div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Eggs, 2 dozen</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Mozzarella</div>
+      <div class="grocery-item-note">Pizza Friday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Parmesan</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Greek yogurt</div>
+      <div class="grocery-item-note">Tub + individual cups</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Half and half</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Sour cream</div>
+      <div class="grocery-item-note">Taco Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+
+  <div class="grocery-section-header">Bakery</div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Sourdough sliced bread</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Morning rounds</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Dinner rolls</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Buns</div>
+      <div class="grocery-item-note">Thursday pulled pork sandwiches</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+
+  <div class="grocery-section-header">Pantry</div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Corn tortillas</div>
+      <div class="grocery-item-note">Taco Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Hard taco shells</div>
+      <div class="grocery-item-note">Taco Tuesday</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Taco seasoning</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+
+  <div class="grocery-section-header">Beverages</div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Sparkling water</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Limoncello soda</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+
+  <div class="grocery-section-header">Snacks</div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Kind breakfast protein bars</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Almond butter</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Hummus</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Whole grain crackers</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">Mixed nuts + trail mix</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+  <div class="grocery-item">
+    <div class="grocery-check" onclick="toggleCheck(this)"></div>
+    <div class="grocery-item-body">
+      <div class="grocery-item-name">String cheese</div>
+    </div>
+    <button class="grocery-dots" onclick="openEdit(this)">···</button>
+  </div>
+
+</div>
+
+<!-- ── RECIPES VIEW ── -->
+<div class="recipes-view" id="recipes-view">
+  <div class="recipes-search-row">
+    <div class="search-wrap">
+      <svg class="search-icon-abs" width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="19" y2="19"/>
+      </svg>
+      <input class="search-input-field" type="text" placeholder="Search..." />
+    </div>
+    <button class="sort-filter-btn">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75">
+        <line x1="3" y1="5" x2="17" y2="5"/><line x1="6" y1="10" x2="14" y2="10"/><line x1="9" y1="15" x2="11" y2="15"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="recipe-section-header">Recents</div>
+  <div class="recipe-item" onclick="openRecipeDetail()">
+    <div class="recipe-item-body">
+      <div class="recipe-item-name">Roasted Tomato Soup</div>
+      <div class="recipe-item-meta">
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg> 6 ingredients</span>
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg> 45m</span>
+      </div>
+    </div>
+    <svg class="recipe-item-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </div>
+  <div class="recipe-item" onclick="openRecipeDetail()">
+    <div class="recipe-item-body">
+      <div class="recipe-item-name">Pan-seared Salmon</div>
+      <div class="recipe-item-meta">
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg> 4 ingredients</span>
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg> 25m</span>
+      </div>
+    </div>
+    <svg class="recipe-item-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </div>
+
+  <div class="recipe-section-header">Pasta</div>
+  <div class="recipe-item" onclick="openRecipeDetail()">
+    <div class="recipe-item-body">
+      <div class="recipe-item-name">Pasta + Meatballs</div>
+      <div class="recipe-item-meta">
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg> 8 ingredients</span>
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg> 50m</span>
+      </div>
+    </div>
+    <svg class="recipe-item-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </div>
+  <div class="recipe-item" onclick="openRecipeDetail()">
+    <div class="recipe-item-body">
+      <div class="recipe-item-name">Pasta Aglio e Olio</div>
+      <div class="recipe-item-meta">
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg> 5 ingredients</span>
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg> 15m</span>
+      </div>
+    </div>
+    <svg class="recipe-item-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </div>
+
+  <div class="recipe-section-header">Quick Meals</div>
+  <div class="recipe-item" onclick="openRecipeDetail()">
+    <div class="recipe-item-body">
+      <div class="recipe-item-name">Ground Beef Tacos</div>
+      <div class="recipe-item-meta">
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg> 7 ingredients</span>
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg> 20m</span>
+      </div>
+    </div>
+    <svg class="recipe-item-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </div>
+  <div class="recipe-item" onclick="openRecipeDetail()">
+    <div class="recipe-item-body">
+      <div class="recipe-item-name">Sheet Pan Sausage + Veg</div>
+      <div class="recipe-item-meta">
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg> 6 ingredients</span>
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg> 40m</span>
+      </div>
+    </div>
+    <svg class="recipe-item-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </div>
+
+  <div class="recipe-section-header">Fish</div>
+  <div class="recipe-item" onclick="openRecipeDetail()">
+    <div class="recipe-item-body">
+      <div class="recipe-item-name">Shrimp + Orzo Bowl</div>
+      <div class="recipe-item-meta">
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg> 8 ingredients</span>
+        <span class="recipe-meta-tag"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg> 30m</span>
+      </div>
+    </div>
+    <svg class="recipe-item-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </div>
+</div>
+
+<!-- ── ACCOUNT VIEW ── -->
+<div class="account-view" id="account-view">
+  <div class="account-section-label">Household</div>
+  <div class="account-card-group">
+    <div class="account-member-row">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="color:var(--ink-faint);flex-shrink:0"><path d="M3 11l2-2m0 0l7-7 7 7M5 9v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+      <span class="account-member-name">Anna Shaw <span style="color:var(--ink-muted);font-weight:400">(You)</span></span>
+      <span class="account-member-role">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Principal
+      </span>
+    </div>
+    <div class="account-member-row">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="color:var(--ink-faint);flex-shrink:0"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="account-member-name">Jason Short</span>
+      <span class="account-member-role">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Member
+      </span>
+    </div>
+    <div class="account-member-row">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="color:var(--ink-faint);flex-shrink:0"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="account-member-name">Lukas</span>
+      <span class="account-member-add">+</span>
+    </div>
+    <div class="account-member-row">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="color:var(--ink-faint);flex-shrink:0"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="account-member-name">Clayton</span>
+      <span class="account-member-add">+</span>
+    </div>
+  </div>
+  <button class="account-invite-btn">
+    Invite Member
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </button>
+
+  <div class="account-section-label">Preferences</div>
+  <div class="account-pref-group">
+    <div class="account-pref-row">
+      <span class="account-pref-label">Cooking style</span>
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+    </div>
+    <div class="account-pref-row">
+      <span class="account-pref-label">Dietary needs</span>
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+    </div>
+    <div class="account-pref-row">
+      <span class="account-pref-label">Food preferences</span>
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+    </div>
+  </div>
+
+  <button class="account-logout-btn">Logout</button>
+</div>
+
+<!-- ── ADD RECIPE DRAWER ── -->
+<div class="add-recipe-overlay" id="add-recipe-overlay" onclick="closeAddRecipeDrawer()"></div>
+<div class="add-recipe-drawer" id="add-recipe-drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-title">Add New Recipe</div>
+  <div class="drawer-subtitle">Choose how you want to import your dish</div>
+  <div class="drawer-section-label">Add from URL</div>
+  <div class="drawer-url-row">
+    <input class="drawer-url-input" type="url" placeholder="https://recipe-website.com/" onclick="event.stopPropagation()" />
+    <button class="drawer-add-btn">Add</button>
+  </div>
+  <div class="drawer-or"><div class="drawer-or-line"></div>or<div class="drawer-or-line"></div></div>
+  <button class="drawer-option dark" onclick="requestCameraPermission()">
+    <div class="drawer-option-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+        <circle cx="12" cy="13" r="4"/>
+      </svg>
+    </div>
+    <div class="drawer-option-body">
+      <div class="drawer-option-title">Take Photo</div>
+      <div class="drawer-option-sub">Scan cookbook or printout</div>
+    </div>
+  </button>
+  <button class="drawer-option light" onclick="closeAddRecipeDrawer(); openReviewEdit()">
+    <div class="drawer-option-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+    </div>
+    <div class="drawer-option-body">
+      <div class="drawer-option-title">Enter by Hand</div>
+      <div class="drawer-option-sub">Type in ingredients &amp; steps</div>
+    </div>
+    <svg class="drawer-chevron" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 4 13 10 7 16"/></svg>
+  </button>
+</div>
+
+<!-- ── CAMERA PERMISSION DIALOG ── -->
+<div class="camera-perm-overlay" id="camera-perm-overlay">
+  <div class="sys-dialog">
+    <div class="sys-dialog-icon">📷</div>
+    <div class="sys-dialog-title">Allow this app to take pictures and record video?</div>
+    <div class="sys-dialog-divider"></div>
+    <button class="sys-dialog-btn primary" onclick="grantCameraPermission()">While using the app</button>
+    <div class="sys-dialog-divider"></div>
+    <button class="sys-dialog-btn" onclick="grantCameraPermission()">Only this time</button>
+    <div class="sys-dialog-divider"></div>
+    <button class="sys-dialog-btn" onclick="denyCamera()">Don't allow</button>
+  </div>
+</div>
+
+<!-- ── CAMERA VIEW ── -->
+<div class="camera-view" id="camera-view">
+  <div class="camera-bg">
+    <div class="camera-top-bar">
+      <button class="camera-top-btn" onclick="closeCameraView()">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg>
+      </button>
+      <button class="camera-top-btn">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><polygon points="13 2 3 14 10 14 7 22 17 10 10 10 13 2"/></svg>
+      </button>
+    </div>
+    <div class="camera-faux-page">
+      <div class="camera-page-line"></div>
+      <div class="camera-page-line" style="width:90%"></div>
+      <div class="camera-page-line" style="width:75%"></div>
+      <div class="camera-page-line" style="width:85%"></div>
+      <div class="camera-page-line" style="width:65%"></div>
+      <div class="camera-page-line" style="width:80%"></div>
+      <div class="camera-frame-guide">
+        <div class="camera-corner tl"></div>
+        <div class="camera-corner tr"></div>
+        <div class="camera-corner bl"></div>
+        <div class="camera-corner br"></div>
+      </div>
+    </div>
+    <div class="camera-hint">Align recipe within the frame</div>
+  </div>
+  <div class="camera-controls">
+    <button class="camera-side-btn">
+      <div class="camera-side-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      <span class="camera-side-label">Gallery</span>
+    </button>
+    <button class="camera-capture-btn" onclick="captureAndProcess()"></button>
+    <button class="camera-side-btn">
+      <div class="camera-side-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+      </div>
+      <span class="camera-side-label">Scanner</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── PROCESSING VIEW ── -->
+<div class="processing-view" id="processing-view">
+  <div class="processing-spinner"></div>
+  <div class="processing-title">Interpreting recipe…</div>
+  <div class="processing-sub">Extracting ingredients and steps from your scan</div>
+  <div class="processing-steps">
+    <div class="proc-step">
+      <div class="proc-indicator" id="proc-step-1"></div>
+      <span class="proc-label" id="proc-label-1">Image captured</span>
+    </div>
+    <div class="proc-step">
+      <div class="proc-indicator" id="proc-step-2"></div>
+      <span class="proc-label" id="proc-label-2">OCR handwriting analysis</span>
+    </div>
+    <div class="proc-step">
+      <div class="proc-indicator" id="proc-step-3"></div>
+      <span class="proc-label" id="proc-label-3">Categorizing components</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── REVIEW / EDIT RECIPE VIEW ── -->
+<div class="recipe-edit-view" id="recipe-edit-view">
+  <div class="rview-header">
+    <div class="rview-header-title">Edit Recipe</div>
+    <button class="rview-header-btn">+</button>
+  </div>
+  <div class="rview-content">
+    <div class="rview-section">Recipe Title</div>
+    <div class="rview-field">
+      <input class="rview-input" type="text" value="Roasted Tomato Soup" />
+    </div>
+    <div class="rview-split">
+      <div class="rview-half">
+        <div class="rview-label">Prep Time</div>
+        <input class="rview-input" type="text" value="45 min" />
+      </div>
+      <div class="rview-half">
+        <div class="rview-label">Servings</div>
+        <input class="rview-input" type="text" value="4 People" />
+      </div>
+    </div>
+    <div class="rview-section">Ingredients</div>
+    <div class="rview-ingredient-row">
+      <span class="rview-ingredient-text">2 lbs Vine-ripened tomatoes</span>
+      <button class="rview-remove-btn">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="10" cy="10" r="8"/><line x1="7" y1="10" x2="13" y2="10"/></svg>
+      </button>
+    </div>
+    <div class="rview-ingredient-row">
+      <span class="rview-ingredient-text">6 cloves Garlic, peeled</span>
+      <button class="rview-remove-btn">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="10" cy="10" r="8"/><line x1="7" y1="10" x2="13" y2="10"/></svg>
+      </button>
+    </div>
+    <div class="rview-ingredient-row">
+      <span class="rview-ingredient-text">2 tbsp Olive oil</span>
+      <button class="rview-remove-btn">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="10" cy="10" r="8"/><line x1="7" y1="10" x2="13" y2="10"/></svg>
+      </button>
+    </div>
+    <div class="rview-add-row">
+      <span class="rview-add-text">Add another ingredient</span>
+      <span class="rview-add-icon">+</span>
+    </div>
+    <div class="rview-section">Instructions</div>
+    <div class="rview-step-row">
+      <div class="rview-step-num">1</div>
+      <span class="rview-step-text">Preheat oven to 400°F. Cut tomatoes in half and place on a baking sheet with garlic and onion. Drizzle with olive oil.</span>
+    </div>
+    <div class="rview-step-row">
+      <div class="rview-step-num">2</div>
+      <span class="rview-step-text">Roast for 45 minutes until charred. Transfer to a blender with fresh basil and broth. Blend until smooth.</span>
+    </div>
+    <div class="rview-add-step">
+      <span style="font-size:15px;color:var(--accent);margin-right:4px;">+</span>
+      <span class="rview-add-step-text">Add Step</span>
+    </div>
+  </div>
+  <div class="rview-save-bar">
+    <button class="rview-save-btn" onclick="saveAndShowDetail()">Save Recipe</button>
+  </div>
+</div>
+
+<!-- ── RECIPE DETAIL VIEW ── -->
+<div class="recipe-detail-view" id="recipe-detail-view">
+  <div class="recipe-hero">
+    <div class="recipe-hero-overlay"></div>
+    <button class="recipe-hero-back" onclick="closeRecipeDetail()">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="13 4 7 10 13 16"/></svg>
+    </button>
+    <div class="recipe-hero-title">Roasted Tomato Soup</div>
+  </div>
+  <div class="recipe-detail-content">
+    <div class="recipe-chips-row">
+      <div class="recipe-chip">
+        <div class="recipe-chip-label">Prep Time</div>
+        <div class="recipe-chip-value">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="10" cy="10" r="7"/><polyline points="10 6 10 10 13 12"/></svg>
+          45 min
+        </div>
+      </div>
+      <div class="recipe-chip">
+        <div class="recipe-chip-label">Servings</div>
+        <div class="recipe-chip-value">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 6v4c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/><path d="M3 10v4c0 1.66 3.13 3 7 3s7-1.34 7-3v-4"/></svg>
+          4 People
+        </div>
+      </div>
+    </div>
+    <div class="recipe-detail-heading">
+      <span class="recipe-detail-heading-title">Ingredients</span>
+      <span class="recipe-detail-heading-count">6 items</span>
+    </div>
+    <div class="recipe-detail-ingredient">
+      <div class="recipe-detail-bullet"></div>
+      <span class="recipe-detail-ingredient-text">2 lbs Vine-ripened tomatoes</span>
+    </div>
+    <div class="recipe-detail-ingredient">
+      <div class="recipe-detail-bullet"></div>
+      <span class="recipe-detail-ingredient-text">6 cloves Garlic, peeled</span>
+    </div>
+    <div class="recipe-detail-ingredient">
+      <div class="recipe-detail-bullet"></div>
+      <span class="recipe-detail-ingredient-text">2 tbsp Olive oil</span>
+    </div>
+    <div class="recipe-detail-ingredient">
+      <div class="recipe-detail-bullet"></div>
+      <span class="recipe-detail-ingredient-text">1 yellow onion, quartered</span>
+    </div>
+    <div class="recipe-detail-ingredient">
+      <div class="recipe-detail-bullet"></div>
+      <span class="recipe-detail-ingredient-text">Fresh basil, handful</span>
+    </div>
+    <div class="recipe-detail-ingredient">
+      <div class="recipe-detail-bullet"></div>
+      <span class="recipe-detail-ingredient-text">2 cups vegetable broth</span>
+    </div>
+    <div class="recipe-detail-heading" style="padding-top:16px;">
+      <span class="recipe-detail-heading-title">Instructions</span>
+    </div>
+    <div class="recipe-detail-step">
+      <div class="recipe-detail-step-num">1</div>
+      <span class="recipe-detail-step-text">Preheat oven to 400°F. Cut tomatoes in half and place on a baking sheet with garlic and onion. Drizzle with olive oil.</span>
+    </div>
+    <div class="recipe-detail-step">
+      <div class="recipe-detail-step-num">2</div>
+      <span class="recipe-detail-step-text">Roast for 45 minutes until charred and caramelized. Transfer to a blender with fresh basil and broth. Blend until smooth.</span>
+    </div>
+    <div class="recipe-detail-step">
+      <div class="recipe-detail-step-num">3</div>
+      <span class="recipe-detail-step-text">Season with salt and pepper. Serve with crusty bread or a swirl of cream.</span>
+    </div>
+  </div>
+  <div class="recipe-detail-cta">
+    <button class="recipe-detail-cta-btn">Start Cooking</button>
+  </div>
+</div>
+
+<!-- ── BOTTOM FIXED ── -->
+<div class="bottom-fixed">
+
+  <!-- AI CONTAINER (single pill that expands on tap) -->
+  <div class="ai-container">
+    <!-- Quick prompts: hidden inside container, expand upward on activation -->
+    <div class="ai-expanded-section" id="ai-expanded-section">
+      <div class="ai-expanded-heading">Update your plan</div>
+      <div class="ai-expanded-inner">
+        <button class="quick-prompt-pill" onclick="expandChat('create')">Create new plan</button>
+        <button class="quick-prompt-pill" onclick="expandChat('modify')">Modify plan</button>
+        <button class="quick-prompt-pill" onclick="expandChat('create')">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75">
+            <path d="M4 3h12v11l-3 3H4V3z"/>
+            <line x1="7" y1="7.5" x2="13" y2="7.5"/>
+            <line x1="7" y1="10.5" x2="10" y2="10.5"/>
+          </svg>
+          Note
+        </button>
+      </div>
+    </div>
+    <!-- Prompt bar -->
+    <div class="ai-bar" id="ai-bar" onclick="activateBar()">
+      <div class="ai-prompt-text">Update your plan</div>
+      <input class="ai-bar-input" type="text" placeholder="Chat about meals" onclick="event.stopPropagation()" />
+      <!-- Unactivated: Note icon only -->
+      <button class="ai-note-btn" onclick="event.stopPropagation()">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 3h12v11l-3 3H4V3z"/>
+          <line x1="7" y1="7.5" x2="13" y2="7.5"/>
+          <line x1="7" y1="10.5" x2="10" y2="10.5"/>
+        </svg>
+      </button>
+      <!-- Activated: mic + gold send -->
+      <div class="ai-send-group">
+        <button class="ai-action-btn" onclick="event.stopPropagation()">
+          <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75">
+            <rect x="7" y="2" width="6" height="9" rx="3"/>
+            <path d="M4 10a6 6 0 0012 0"/>
+            <line x1="10" y1="17" x2="10" y2="15.5"/>
+            <line x1="7.5" y1="17" x2="12.5" y2="17"/>
+          </svg>
+        </button>
+        <button class="ai-send-circle-sm" onclick="event.stopPropagation(); submitBarInput()">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2.5">
+            <line x1="10" y1="15" x2="10" y2="5"/>
+            <polyline points="6 9 10 5 14 9"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-view="meals" data-title="Meals" onclick="setTab(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 3C8 3 4.5 6 4.5 10c0 2.5 1.3 4.7 3.2 6H8v2h8v-2h-.3C17.7 14.7 19 12.5 19 10c0-4-3.5-7-7-7z"/>
+        <line x1="9" y1="21" x2="15" y2="21"/>
+        <line x1="10" y1="18" x2="10" y2="21"/>
+        <line x1="14" y1="18" x2="14" y2="21"/>
+      </svg>
+      <span class="tab-label">Meals</span>
+    </button>
+    <button class="tab-btn" data-view="grocery" data-title="Food list" onclick="setTab(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span class="tab-label">Grocery</span>
+    </button>
+    <button class="tab-btn" data-view="recipes" data-title="Recipes" onclick="setTab(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+        <line x1="8" y1="8" x2="16" y2="8"/>
+        <line x1="8" y1="12" x2="13" y2="12"/>
+      </svg>
+      <span class="tab-label">Recipes</span>
+    </button>
+    <button class="tab-btn" data-view="account" data-title="Account" onclick="setTab(this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span class="tab-label">Account</span>
+    </button>
+  </div>
+
+</div>
+
+<!-- ── CHAT OVERLAY ── -->
+<div class="chat-overlay" id="chat-overlay">
+
+  <div class="chat-drag-handle" onclick="closeChat()"></div>
+
+  <div class="chat-overlay-header" id="chat-overlay-header">
+    <div class="chat-mode-title">Create new plan</div>
+    <div class="chat-subtitle">Tell me about your week — scheduling, preferences, feedback on past meals, anything that should change the routine.</div>
+  </div>
+
+  <div class="chat-messages-area" id="chat-messages-area"></div>
+
+  <div class="chat-input-row">
+    <div class="chat-input-field" onclick="advanceChat()">Reply to assistant…</div>
+    <button class="chat-send-circle" onclick="advanceChat()">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2.5">
+        <line x1="10" y1="15" x2="10" y2="5"/>
+        <polyline points="6 9 10 5 14 9"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="chat-tab-bar">
+    <button class="chat-tab-btn active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 3C8 3 4.5 6 4.5 10c0 2.5 1.3 4.7 3.2 6H8v2h8v-2h-.3C17.7 14.7 19 12.5 19 10c0-4-3.5-7-7-7z"/>
+        <line x1="9" y1="21" x2="15" y2="21"/>
+        <line x1="10" y1="18" x2="10" y2="21"/>
+        <line x1="14" y1="18" x2="14" y2="21"/>
+      </svg>
+      <span class="chat-tab-btn-label">Meals</span>
+    </button>
+    <button class="chat-tab-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span class="chat-tab-btn-label">Grocery</span>
+    </button>
+    <button class="chat-tab-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+        <line x1="8" y1="8" x2="16" y2="8"/>
+        <line x1="8" y1="12" x2="13" y2="12"/>
+      </svg>
+      <span class="chat-tab-btn-label">Recipes</span>
+    </button>
+    <button class="chat-tab-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span class="chat-tab-btn-label">Account</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  let chatStep = 0;
+  let chatLocked = false;
+
+  function toggleCollapsible(header) {
+    const chevron = header.querySelector('.chevron');
+    const body = header.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    chevron.classList.toggle('open', !isOpen);
+  }
+
+  function setTab(btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const view = btn.dataset.view;
+    const title = btn.dataset.title || '';
+    document.getElementById('header-title').textContent = title;
+    document.getElementById('meals-view').style.display = view === 'meals' ? '' : 'none';
+    document.getElementById('grocery-view').style.display = view === 'grocery' ? 'block' : 'none';
+    document.getElementById('recipes-view').style.display = view === 'recipes' ? 'block' : 'none';
+    document.getElementById('account-view').style.display = view === 'account' ? 'block' : 'none';
+    document.getElementById('header-week').style.display = (view === 'recipes' || view === 'account') ? 'none' : '';
+    document.getElementById('header-add-btn').style.display = view === 'recipes' ? 'flex' : 'none';
+  }
+
+  function toggleCheck(circle) {
+    circle.classList.toggle('checked');
+    circle.closest('.grocery-item').classList.toggle('checked-item');
+  }
+
+  function toggleHideChecked() {
+    const view = document.getElementById('grocery-view');
+    const btn = document.getElementById('grocery-hide-btn');
+    const hiding = view.classList.toggle('hide-checked');
+    btn.classList.toggle('active', hiding);
+  }
+
+  function clearAllChecked() {
+    document.querySelectorAll('.grocery-check.checked').forEach(c => {
+      c.classList.remove('checked');
+      c.closest('.grocery-item').classList.remove('checked-item');
+    });
+  }
+
+  function quickAddItem() {
+    const input = document.getElementById('quick-add-input');
+    const name = input.value.trim();
+    if (!name) return;
+    const view = document.getElementById('grocery-view');
+    const firstSection = view.querySelector('.grocery-section-header');
+    const item = document.createElement('div');
+    item.className = 'grocery-item';
+    item.innerHTML = `
+      <div class="grocery-check" onclick="toggleCheck(this)"></div>
+      <div class="grocery-item-body"><div class="grocery-item-name">${name}</div></div>
+      <button class="grocery-dots" onclick="openEdit(this)">···</button>`;
+    view.insertBefore(item, firstSection);
+    input.value = '';
+  }
+
+  function openEdit(dotsBtn) {
+    document.querySelectorAll('.grocery-item-edit').forEach(form => {
+      const hidden = form.previousElementSibling;
+      if (hidden) hidden.style.display = '';
+      form.remove();
+    });
+    const item = dotsBtn.closest('.grocery-item');
+    const name = item.querySelector('.grocery-item-name').textContent;
+    const note = item.querySelector('.grocery-item-note')?.textContent || '';
+    item.style.display = 'none';
+    const form = document.createElement('div');
+    form.className = 'grocery-item-edit';
+    form.innerHTML = `
+      <div class="edit-label">Item Name</div>
+      <input class="edit-input" type="text" value="${name}" />
+      <div class="edit-label" style="margin-top:12px">Quantity / Notes</div>
+      <div class="edit-notes-row">
+        <input class="edit-notes-input" type="text" value="${note}" placeholder="optional" />
+        <button class="edit-done-btn" onclick="closeEdit(this)">Done</button>
+      </div>
+      <button class="edit-remove-btn" onclick="removeItem(this)">Remove item</button>`;
+    item.after(form);
+    form.querySelector('.edit-input').focus();
+  }
+
+  function removeItem(btn) {
+    const form = btn.closest('.grocery-item-edit');
+    const item = form.previousElementSibling;
+    item.remove();
+    form.remove();
+  }
+
+  function closeEdit(doneBtn) {
+    const form = doneBtn.closest('.grocery-item-edit');
+    const item = form.previousElementSibling;
+    const newName = form.querySelector('.edit-input').value.trim();
+    const newNote = form.querySelector('.edit-notes-input').value.trim();
+    if (newName) {
+      item.querySelector('.grocery-item-name').textContent = newName;
+      let noteEl = item.querySelector('.grocery-item-note');
+      if (newNote) {
+        if (!noteEl) {
+          noteEl = document.createElement('div');
+          noteEl.className = 'grocery-item-note';
+          item.querySelector('.grocery-item-body').appendChild(noteEl);
+        }
+        noteEl.textContent = newNote;
+      } else if (noteEl) {
+        noteEl.remove();
+      }
+    }
+    item.style.display = '';
+    form.remove();
+  }
+
+  function activateBar() {
+    const exp = document.getElementById('ai-expanded-section');
+    const bar = document.getElementById('ai-bar');
+    if (exp.classList.contains('open')) return;
+    exp.classList.add('open');
+    bar.classList.add('activated');
+    document.addEventListener('click', dismissBarOnOutsideClick);
+  }
+
+  function dismissBarOnOutsideClick(e) {
+    const fixed = document.querySelector('.bottom-fixed');
+    if (!fixed.contains(e.target)) {
+      deactivateBar();
+      document.removeEventListener('click', dismissBarOnOutsideClick);
+    }
+  }
+
+  function deactivateBar() {
+    const exp = document.getElementById('ai-expanded-section');
+    const bar = document.getElementById('ai-bar');
+    exp.classList.remove('open');
+    bar.classList.remove('activated');
+  }
+
+  function submitBarInput() {
+    const input = document.querySelector('.ai-bar-input');
+    const text = input ? input.value.trim() : '';
+    input.value = '';
+    expandChat('create', text);
+  }
+
+  function expandChat(mode) {
+    document.removeEventListener('click', dismissBarOnOutsideClick);
+    deactivateBar();
+    chatStep = 0;
+    chatLocked = false;
+    document.getElementById('chat-messages-area').innerHTML = '';
+    document.getElementById('chat-overlay-header').style.display = 'block';
+    document.getElementById('chat-overlay').classList.add('open');
+  }
+
+  function closeChat() {
+    document.getElementById('chat-overlay').classList.remove('open');
+    chatStep = 0;
+    chatLocked = false;
+  }
+
+  function advanceChat() {
+    if (chatLocked) return;
+    const area = document.getElementById('chat-messages-area');
+    chatStep++;
+
+    if (chatStep === 1) {
+      document.getElementById('chat-overlay-header').style.display = 'none';
+      addUserMessage(area, "I want some healthy Mediterranean meals this week, but Tuesday is very busy.");
+      chatLocked = true;
+      setTimeout(() => {
+        addAssistantMessage(area, "Got it! For that busy Tuesday, would you like a quick 15-minute meal or something you can prep ahead on Monday?");
+        chatLocked = false;
+      }, 900);
+
+    } else if (chatStep === 2) {
+      addUserMessage(area, "A quick 15-minute meal please.");
+      chatLocked = true;
+      setTimeout(() => { showDraftMeals(area); }, 1000);
+
+    } else if (chatStep >= 3) {
+      // Handled by confirm button
+    }
+  }
+
+  function addUserMessage(area, text) {
+    const now = new Date();
+    const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const wrap = document.createElement('div');
+    wrap.style.alignSelf = 'flex-end';
+    wrap.style.display = 'flex';
+    wrap.style.flexDirection = 'column';
+    wrap.style.alignItems = 'flex-end';
+    wrap.innerHTML = `<div class="chat-bubble user">${text}</div><div class="chat-timestamp">${time}</div>`;
+    area.appendChild(wrap);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function addAssistantMessage(area, text) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<div class="chat-bubble assistant">${text}</div><div class="chat-assistant-label">Assistant</div>`;
+    area.appendChild(wrap);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function showDraftMeals(area) {
+    const meals = [
+      { day:'MON', date:'15', theme:'Fish Night',         title:'Grilled branzino + roasted veg',      time:'25 min', pill:'C: leftover chicken ✓' },
+      { day:'TUE', date:'16', theme:'Quick Tuesday',      title:'Chicken shawarma bowls',               time:'15 min', pill:'C: plain chicken + rice ✓' },
+      { day:'WED', date:'17', theme:'Mediterranean Night',title:'Lamb kofta + tabbouleh + pita',        time:'35 min', pill:'C: plain lamb + pita ✓' },
+      { day:'THU', date:'18', theme:'Easy Night',         title:"TJ's pulled pork sandwiches",          time:'15 min', pill:'C: plain pulled pork ✓' },
+      { day:'FRI', date:'19', theme:'Pizza Night',        title:'Homemade pizza',                       time:'30 min', pill:'C: cheese pizza ✓' },
+    ];
+
+    const group = document.createElement('div');
+    group.className = 'draft-cards-group';
+    meals.forEach(m => {
+      const card = document.createElement('div');
+      card.className = 'draft-meal-card';
+      card.innerHTML = `
+        <div class="draft-card-row">
+          <div class="draft-day-col">
+            <div class="draft-day-name">${m.day}</div>
+            <div class="draft-day-date">${m.date}</div>
+          </div>
+          <div class="draft-meal-body">
+            <div class="draft-top-row">
+              <div class="draft-theme">${m.theme}</div>
+              <div class="draft-time">${m.time}</div>
+            </div>
+            <div class="draft-title">${m.title}</div>
+            <span class="draft-pill">${m.pill}</span>
+          </div>
+        </div>`;
+      group.appendChild(card);
+    });
+    area.appendChild(group);
+    area.scrollTop = area.scrollHeight;
+
+    setTimeout(() => {
+      addAssistantMessage(area, "Here's your plan for the week — Mediterranean focus with a quick Tuesday and a pizza Friday. Ready to update your plan?");
+      const row = document.createElement('div');
+      row.className = 'chat-confirm-row';
+
+      const confirm = document.createElement('button');
+      confirm.className = 'chat-confirm-pill';
+      confirm.textContent = 'Update my plan';
+      confirm.onclick = () => { row.remove(); confirmUpdate(area); };
+
+      const more = document.createElement('button');
+      more.className = 'chat-confirm-pill';
+      more.textContent = 'Make more changes';
+      more.onclick = () => { row.remove(); chatLocked = false; chatStep = 1; };
+
+      row.appendChild(confirm);
+      row.appendChild(more);
+      area.appendChild(row);
+      area.scrollTop = area.scrollHeight;
+      chatLocked = false;
+    }, 700);
+  }
+
+  function confirmUpdate(area) {
+    chatLocked = true;
+    const thinking = document.createElement('div');
+    thinking.innerHTML = `<div class="thinking-dots"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div><div class="chat-assistant-label">Assistant</div>`;
+    area.appendChild(thinking);
+    area.scrollTop = area.scrollHeight;
+    setTimeout(() => { closeChat(); }, 2200);
+  }
+
+  // ── RECIPE FLOW ──
+
+  function openAddRecipeDrawer() {
+    document.getElementById('add-recipe-drawer').classList.add('open');
+    document.getElementById('add-recipe-overlay').classList.add('open');
+  }
+
+  function closeAddRecipeDrawer() {
+    document.getElementById('add-recipe-drawer').classList.remove('open');
+    document.getElementById('add-recipe-overlay').classList.remove('open');
+  }
+
+  function requestCameraPermission() {
+    document.getElementById('camera-perm-overlay').classList.add('open');
+  }
+
+  function grantCameraPermission() {
+    document.getElementById('camera-perm-overlay').classList.remove('open');
+    closeAddRecipeDrawer();
+    setTimeout(() => {
+      document.getElementById('camera-view').classList.add('open');
+    }, 300);
+  }
+
+  function denyCamera() {
+    document.getElementById('camera-perm-overlay').classList.remove('open');
+  }
+
+  function closeCameraView() {
+    document.getElementById('camera-view').classList.remove('open');
+  }
+
+  function captureAndProcess() {
+    document.getElementById('processing-view').classList.add('open');
+    // Reset steps
+    ['1','2','3'].forEach(n => {
+      document.getElementById('proc-step-'+n).classList.remove('done');
+      document.getElementById('proc-label-'+n).classList.remove('done');
+    });
+    // Animate steps
+    setTimeout(() => markStep('1'), 400);
+    setTimeout(() => markStep('2'), 1200);
+    setTimeout(() => markStep('3'), 2100);
+    setTimeout(() => {
+      document.getElementById('processing-view').classList.remove('open');
+      document.getElementById('camera-view').classList.remove('open');
+      document.getElementById('recipe-edit-view').classList.add('open');
+    }, 3200);
+  }
+
+  function markStep(n) {
+    document.getElementById('proc-step-'+n).classList.add('done');
+    document.getElementById('proc-label-'+n).classList.add('done');
+  }
+
+  function openReviewEdit() {
+    document.getElementById('recipe-edit-view').classList.add('open');
+  }
+
+  function saveAndShowDetail() {
+    document.getElementById('recipe-edit-view').classList.remove('open');
+    document.getElementById('recipe-detail-view').classList.add('open');
+  }
+
+  function openRecipeDetail() {
+    document.getElementById('recipe-detail-view').classList.add('open');
+  }
+
+  function closeRecipeDetail() {
+    document.getElementById('recipe-detail-view').classList.remove('open');
+  }
+</script>
+</body>
+</html>
