@@ -809,10 +809,12 @@
     border-radius: 22px;
     padding: 12px 18px;
     font-size: 15px;
-    color: rgba(255,255,255,0.28);
+    color: rgba(255,255,255,0.88);
     font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
+    border: none;
+    outline: none;
   }
+  .chat-input-field::placeholder { color: rgba(255,255,255,0.28); }
   .chat-send-circle {
     width: 40px; height: 40px;
     border-radius: 50%;
@@ -2475,8 +2477,8 @@
   <div class="chat-messages-area" id="chat-messages-area"></div>
 
   <div class="chat-input-row">
-    <div class="chat-input-field" onclick="advanceChat()">Reply to assistant…</div>
-    <button class="chat-send-circle" onclick="advanceChat()">
+    <input class="chat-input-field" id="chat-input" type="text" placeholder="Reply to assistant…" />
+    <button class="chat-send-circle" onclick="sendMessage()">
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2.5">
         <line x1="10" y1="15" x2="10" y2="5"/>
         <polyline points="6 9 10 5 14 9"/>
@@ -2523,8 +2525,36 @@
 </div>
 
 <script>
-  let chatStep = 0;
-  let chatLocked = false;
+  const ANTHROPIC_API_KEY = 'YOUR_API_KEY_HERE';
+
+  const SYSTEM_PROMPT = `You are a helpful meal planning assistant for Anna's family. Keep replies conversational and concise — this is a mobile chat interface, so short paragraphs work best.
+
+FAMILY:
+- Anna & Jason (adults). Jason sometimes away during the week, home weekends.
+- Lukas, 15: eats a lot, not picky, needs volume.
+- Clayton (C), 12: picky eater. Reliable foods: plain grilled/pan-seared chicken, plain pasta + butter, ground beef or turkey (tacos), pizza (cheese only), burgers, plain sausage, raw veg (carrots, cucumbers, bell peppers). No separate meal is cooked — every dinner is deconstructed so C has something from what's already being made.
+
+PLANNING RULES:
+- Plan 6 of 7 nights; always leave one night open
+- Taco Tuesday is a fixed anchor — rotate proteins each week
+- Friday is pizza night (homemade dough, cold ferment started Sunday or Wednesday)
+- Fresh meat Sun–Wed; frozen/shelf-stable proteins Thu–Sat
+- Quick weeknights under 35 min; Sunday is bigger cook + prep day
+- On any grill night, batch-cook extra chicken breasts — covers C all week and adult salad protein
+- When pasta + meatballs is on the menu, always double batch and freeze half
+
+CURRENT WEEK (today is Tuesday June 23, 2026):
+- Sat Jun 20: Pan-seared pork tenderloin + roasted potatoes + zucchini & peppers (done)
+- Sun Jun 21 (Father's Day): Tri-tip grill + batch chicken + grilled corn + asparagus (done)
+- Mon Jun 22: Pesto pasta + sundried tomatoes + wilted spinach + sliced grilled chicken (done)
+- Tue Jun 23 (TODAY): Ground turkey tacos + sautéed peppers & onions + Mexican rice
+- Wed Jun 24: Salmon + roasted broccoli + rice + homemade sourdough / C uses Sunday batch chicken
+- Thu Jun 25: Shrimp + orzo + cucumber + cherry tomatoes + lemon + arugula
+- Fri Jun 26: Homemade pizza + roasted peppers & mushrooms + side salad
+
+When the user asks to change the plan, suggest specific swaps. If they want a new week planned, ask what context you need (events, fridge inventory, travel, Jason home or away).`;
+
+  let chatHistory = [];
 
   function toggleCollapsible(header) {
     const chevron = header.querySelector('.chevron');
@@ -2666,58 +2696,122 @@
   function submitBarInput() {
     const input = document.querySelector('.ai-bar-input');
     const text = input ? input.value.trim() : '';
-    input.value = '';
-    expandChat('create', text);
+    if (input) input.value = '';
+    expandChat('create', text || null);
   }
 
-  function expandChat(mode) {
+  function expandChat(mode, initialText) {
     document.removeEventListener('click', dismissBarOnOutsideClick);
     deactivateBar();
-    chatStep = 0;
-    chatLocked = false;
+    chatHistory = [];
     document.getElementById('chat-messages-area').innerHTML = '';
     document.getElementById('chat-overlay-header').style.display = 'block';
     document.getElementById('chat-overlay').classList.add('open');
+    if (initialText) setTimeout(() => sendMessage(initialText), 150);
   }
 
   function closeChat() {
     document.getElementById('chat-overlay').classList.remove('open');
-    chatStep = 0;
-    chatLocked = false;
+    chatHistory = [];
   }
 
-  function advanceChat() {
-    if (chatLocked) return;
+  async function sendMessage(initialText) {
+    const inputEl = document.getElementById('chat-input');
+    const text = initialText || (inputEl ? inputEl.value.trim() : '');
+    if (!text) return;
+    if (inputEl) inputEl.value = '';
+
     const area = document.getElementById('chat-messages-area');
-    chatStep++;
+    document.getElementById('chat-overlay-header').style.display = 'none';
 
-    if (chatStep === 1) {
-      document.getElementById('chat-overlay-header').style.display = 'none';
-      addUserMessage(area, "I want some healthy Mediterranean meals this week, but Tuesday is very busy.");
-      chatLocked = true;
+    addUserMessage(area, text);
+    chatHistory.push({ role: 'user', content: text });
+
+    const thinkingEl = addThinkingDots(area);
+
+    if (ANTHROPIC_API_KEY === 'YOUR_API_KEY_HERE') {
       setTimeout(() => {
-        addAssistantMessage(area, "Got it! For that busy Tuesday, would you like a quick 15-minute meal or something you can prep ahead on Monday?");
-        chatLocked = false;
-      }, 900);
-
-    } else if (chatStep === 2) {
-      addUserMessage(area, "A quick 15-minute meal please.");
-      chatLocked = true;
-      setTimeout(() => { showDraftMeals(area); }, 1000);
-
-    } else if (chatStep >= 3) {
-      // Handled by confirm button
+        thinkingEl.remove();
+        addAssistantMessage(area, "Add your Anthropic API key to the prototype to enable live responses.");
+      }, 600);
+      return;
     }
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1024,
+          system: SYSTEM_PROMPT,
+          messages: chatHistory,
+          stream: true
+        })
+      });
+
+      thinkingEl.remove();
+
+      const wrap = document.createElement('div');
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble assistant';
+      const label = document.createElement('div');
+      label.className = 'chat-assistant-label';
+      label.textContent = 'Assistant';
+      wrap.appendChild(bubble);
+      wrap.appendChild(label);
+      area.appendChild(wrap);
+
+      let fullText = '';
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split('\n')) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+              fullText += parsed.delta.text;
+              bubble.textContent = fullText;
+              area.scrollTop = area.scrollHeight;
+            }
+          } catch(e) {}
+        }
+      }
+
+      chatHistory.push({ role: 'assistant', content: fullText });
+
+    } catch(err) {
+      thinkingEl?.remove();
+      addAssistantMessage(area, "Something went wrong — check your API key or network connection.");
+      console.error(err);
+    }
+  }
+
+  function addThinkingDots(area) {
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<div class="thinking-dots"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div><div class="chat-assistant-label">Assistant</div>`;
+    area.appendChild(wrap);
+    area.scrollTop = area.scrollHeight;
+    return wrap;
   }
 
   function addUserMessage(area, text) {
     const now = new Date();
     const time = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     const wrap = document.createElement('div');
-    wrap.style.alignSelf = 'flex-end';
-    wrap.style.display = 'flex';
-    wrap.style.flexDirection = 'column';
-    wrap.style.alignItems = 'flex-end';
+    wrap.style.cssText = 'align-self:flex-end;display:flex;flex-direction:column;align-items:flex-end';
     wrap.innerHTML = `<div class="chat-bubble user">${text}</div><div class="chat-timestamp">${time}</div>`;
     area.appendChild(wrap);
     area.scrollTop = area.scrollHeight;
@@ -2730,71 +2824,9 @@
     area.scrollTop = area.scrollHeight;
   }
 
-  function showDraftMeals(area) {
-    const meals = [
-      { day:'MON', date:'15', theme:'Fish Night',         title:'Grilled branzino + roasted veg',      time:'25 min', pill:'C: leftover chicken ✓' },
-      { day:'TUE', date:'16', theme:'Quick Tuesday',      title:'Chicken shawarma bowls',               time:'15 min', pill:'C: plain chicken + rice ✓' },
-      { day:'WED', date:'17', theme:'Mediterranean Night',title:'Lamb kofta + tabbouleh + pita',        time:'35 min', pill:'C: plain lamb + pita ✓' },
-      { day:'THU', date:'18', theme:'Easy Night',         title:"TJ's pulled pork sandwiches",          time:'15 min', pill:'C: plain pulled pork ✓' },
-      { day:'FRI', date:'19', theme:'Pizza Night',        title:'Homemade pizza',                       time:'30 min', pill:'C: cheese pizza ✓' },
-    ];
-
-    const group = document.createElement('div');
-    group.className = 'draft-cards-group';
-    meals.forEach(m => {
-      const card = document.createElement('div');
-      card.className = 'draft-meal-card';
-      card.innerHTML = `
-        <div class="draft-card-row">
-          <div class="draft-day-col">
-            <div class="draft-day-name">${m.day}</div>
-            <div class="draft-day-date">${m.date}</div>
-          </div>
-          <div class="draft-meal-body">
-            <div class="draft-top-row">
-              <div class="draft-theme">${m.theme}</div>
-              <div class="draft-time">${m.time}</div>
-            </div>
-            <div class="draft-title">${m.title}</div>
-            <span class="draft-pill">${m.pill}</span>
-          </div>
-        </div>`;
-      group.appendChild(card);
-    });
-    area.appendChild(group);
-    area.scrollTop = area.scrollHeight;
-
-    setTimeout(() => {
-      addAssistantMessage(area, "Here's your plan for the week — Mediterranean focus with a quick Tuesday and a pizza Friday. Ready to update your plan?");
-      const row = document.createElement('div');
-      row.className = 'chat-confirm-row';
-
-      const confirm = document.createElement('button');
-      confirm.className = 'chat-confirm-pill';
-      confirm.textContent = 'Update my plan';
-      confirm.onclick = () => { row.remove(); confirmUpdate(area); };
-
-      const more = document.createElement('button');
-      more.className = 'chat-confirm-pill';
-      more.textContent = 'Make more changes';
-      more.onclick = () => { row.remove(); chatLocked = false; chatStep = 1; };
-
-      row.appendChild(confirm);
-      row.appendChild(more);
-      area.appendChild(row);
-      area.scrollTop = area.scrollHeight;
-      chatLocked = false;
-    }, 700);
-  }
-
-  function confirmUpdate(area) {
-    chatLocked = true;
-    const thinking = document.createElement('div');
-    thinking.innerHTML = `<div class="thinking-dots"><div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div></div><div class="chat-assistant-label">Assistant</div>`;
-    area.appendChild(thinking);
-    area.scrollTop = area.scrollHeight;
-    setTimeout(() => { closeChat(); }, 2200);
-  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.activeElement.id === 'chat-input') sendMessage();
+  });
 
   // ── RECIPE FLOW ──
 
